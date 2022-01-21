@@ -3,16 +3,20 @@ import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 
 public class Background {
-    public int x;
-    public int y;
+    public int height;
+    public int width;
     public Image image;
     public AffineTransform transform;
 
-    public void Render(int x, int y, String imagePath){
+    public Background(){
+    }
+
+    public void Background(int height, int width, String imagePath){
         Toolkit.getDefaultToolkit().sync();
-        this.x = x;
-        this.y = y;
+        this.height = height;
+        this.width = width;
         this.image = Utilities.loadImage(imagePath);
+        
     }
     
 }

@@ -11,6 +11,7 @@ public class Utilities {
 
     public static Image loadImage(String path) {
         Image image = null;
+        path = "lib/background";
 
         if (cache.containsKey(path)) {
             return cache.get(path);

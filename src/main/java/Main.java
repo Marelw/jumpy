@@ -2,16 +2,31 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        JFrame f = new JFrame();
-        
-        f.setTitle("Flappy Birb");
-        f.setVisible(true);
+        ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
 
-        // Window size and location
-        f.setSize(400, 500);
-        f.setLocation(100,100);
-        f.setResizable(true);
+        JLabel label = new JLabel(icon);
+        JFrame frame = new JFrame();
+        JPanel panel = new JPanel();
         
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JButton button = new JButton();
+        button.setText("Start"); //ska flyttas
+        frame.add(panel);
+        
+        panel.add(button);
+        panel.add(label);
+        
+        frame.setTitle("Flappy Birb");
+        frame.setVisible(true);
+        
+        // Window size and location
+        frame.setSize(400, 500);
+        frame.setLocation(100,100);
+        frame.setResizable(true);
+        
+        
+        
+        
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
