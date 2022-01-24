@@ -7,20 +7,19 @@ import java.io.IOException;
 
 public class Utilities {
 
-    private static HashMap<String, Image> cache = new HashMap<String, Image>();
+    private static HashMap<String, Image> stack = new HashMap<String, Image>();
 
     public static Image loadImage(String path) {
         Image image = null;
-        path = "lib/background";
 
-        if (cache.containsKey(path)) {
-            return cache.get(path);
+        if (stack.containsKey(path)) {
+            return stack.get(path);
         }
 
         try {
             image = ImageIO.read(new File(path));
-            if(!cache.containsKey(path)) {
-                cache.put(path, image);
+            if(!stack.containsKey(path)) {
+                stack.put(path, image);
             }
         }
         catch (IOException ex){
