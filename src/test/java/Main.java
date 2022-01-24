@@ -1,11 +1,12 @@
 import javax.swing.*;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 public class Main {
     public static void main(String[] args) {
-        extracted();
+        GameDisplay();
     }
 
-    private static void extracted() {
+    private static void GameDisplay() {
         ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
 
         JLabel label = new JLabel(icon);
@@ -26,6 +27,6 @@ public class Main {
         frame.setLocation(100,100);
         frame.setResizable(true);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 }
