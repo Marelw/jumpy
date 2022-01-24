@@ -1,4 +1,5 @@
 import javax.swing.*;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,7 +10,7 @@ public class Main {
         ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
 
         JLabel label = new JLabel(icon);
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("Flappy Birb");
         JPanel panel = new JPanel();
         
         JButton button = new JButton("Start");
@@ -18,7 +19,6 @@ public class Main {
         panel.add(button);
         panel.add(label);
         
-        frame.setTitle("Flappy Birb");
         frame.setVisible(true);
         
         // Window size and location
@@ -26,6 +26,6 @@ public class Main {
         frame.setLocation(100,100);
         frame.setResizable(true);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 }
