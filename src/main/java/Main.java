@@ -2,10 +2,10 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        extracted();
+        GameDisplay();
     }
 
-    private static void extracted() {
+    private static void GameDisplay() {
         ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
 
         JLabel label = new JLabel(icon);
