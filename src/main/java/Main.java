@@ -15,7 +15,7 @@ public class Main{
         JFrame frame = new JFrame("Flappy Birb");
         JPanel panel = new JPanel();
         
-        JButton button = new JButton("Start");
+        JButton button = new JButton("Dude");
 
         frame.add(panel);
 
