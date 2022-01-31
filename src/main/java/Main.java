@@ -13,15 +13,14 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
-        //ImageIcon image = new ImageIcon("lib/bluejumpy.png");
-        BirbTwo birb = new BirbTwo();
+        // ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
+        Birb birb = new Birb();
         //frame.getContentPane().add(birb.getBirb());
 
-        JLabel label = new JLabel(icon);
-        JPanel panel = new JPanel();
+        //JLabel label = new JLabel(icon);
+        //JPanel panel = new JPanel();
         //frame.add(panel);
-        panel.add(label);
+       // panel.add(label);
 
         frame.add(birb);
 
