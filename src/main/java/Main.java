@@ -4,7 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+
 
 public class Main {
     public static void main(String[] args) {
