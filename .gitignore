@@ -1,1 +1,8 @@
 *.class
+/.idea/modules.xml
+/.idea/compiler.xml
+/.idea/git_toolbox_prj.xml
+/.idea/jumpy.iml
+/.idea/misc.xml
+/.idea/vcs.xml
+/.idea/.gitignore

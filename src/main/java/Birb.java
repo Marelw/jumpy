@@ -13,7 +13,7 @@ public class Birb extends JPanel {
     //private boolean isAlive = true;
     //public double velocity;
     //public double gravity;
-    //private int keyResponseDeley;
+    //private int keyResponseDelay;
     //private double birdShift;
 
     /**
