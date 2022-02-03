@@ -1,9 +1,6 @@
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 
 public class Main {
@@ -18,7 +15,7 @@ public class Main {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
-        Birb birb = new Birb();
+        GameConstraints gC = new GameConstraints();
         //frame.getContentPane().add(birb.getBirb());
 
         //JLabel label = new JLabel(icon);
@@ -26,7 +23,7 @@ public class Main {
         //frame.add(panel);
         // panel.add(label);
 
-        frame.add(birb);
+        frame.add(gC);
 
 
 

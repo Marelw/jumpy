@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Birb extends JPanel {
+public class GameConstraints extends JPanel {
 
     /**
      * Bird attributes
@@ -15,7 +15,6 @@ public class Birb extends JPanel {
     //public double gravity;
     //private int keyResponseDelay;
     //private double birdShift;
-    // adding useless comment for commit
 
     /**
      * Bird constants
@@ -25,15 +24,15 @@ public class Birb extends JPanel {
     private Rectangle birbPic;
     private BufferedImage birbImageSprite;
     private BufferedImage background;
-    private int birbImageSpriteCount; //vad är detta till för??????
-    //private Keyboard keyboard; // bryt ut Keyboard response till egen
+    //private int birbImageSpriteCount;
+    //private Keyboard keyboard;
 
-    public Birb() {
+    public GameConstraints() {
         super();
         try {
             this.birbImageSprite = ImageIO.read(new File("lib/bird.png"));
             this.background = ImageIO.read(new File("lib/background.png"));
-            this.birbImageSpriteCount = 0;
+            //this.birbImageSpriteCount = 0;
         } catch (IOException ex) {
             System.out.println("ex" + " Unable to load image");
         }
@@ -41,7 +40,7 @@ public class Birb extends JPanel {
         this.setBounds(10,10,WIDTH,HEIGHT);
         this.setOpaque(true);
 
-        this.birbPic = new Rectangle(20,20, 65, 50 );
+        this.birbPic = new Rectangle(140,200, 65, 50 );
     }
 
     @Override
@@ -55,25 +54,13 @@ public class Birb extends JPanel {
 
     private void drawBirb(Graphics2D g){
         final Dimension d = this.getSize();
-        int offset = 46 * birbImageSpriteCount;
+        //int offset = 46 * birbImageSpriteCount;
         g.drawImage(background, 0, 0, 500,
                 500, 0, 0, 500,500, null);
 
         g.drawImage(birbImageSprite, birbPic.x, birbPic.y, birbPic.x + birbPic.width,
                 birbPic.y + birbPic.height, 0, 0, birbPic.width,birbPic.height, null);
     }
-
-    // public Rendering getRender() {
-    //     Rendering ren = new Rendering(100, 150, "lib/bird.png");
-
-    //     if (image == null) {
-    //         image = Utilities.loadImage("lib/bird.png");
-    //     }
-
-    //     ren.imageRender = image;
-
-    //     return ren;
-    // }
 
     /**
      * @return If bird is alive
@@ -85,7 +72,6 @@ public class Birb extends JPanel {
     /**
      * Kills bird
      */
-
     // public void kill() {
     //     isAlive = false;
     // }
