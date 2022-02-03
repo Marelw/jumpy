@@ -22,7 +22,7 @@ public class Main {
         //JPanel panel = new JPanel();
         //frame.add(panel);
         // panel.add(label);
-
+        //useless comment for commit
         frame.add(gC);
 
 
