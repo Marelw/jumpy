@@ -24,6 +24,7 @@ public class GameConstraints extends JPanel {
     private Rectangle birbPic;
     private BufferedImage birbImageSprite;
     private BufferedImage background;
+    private BufferedImage foreground;
     //private int birbImageSpriteCount;
     //private Keyboard keyboard;
 
@@ -32,6 +33,7 @@ public class GameConstraints extends JPanel {
         try {
             this.birbImageSprite = ImageIO.read(new File("lib/bird.png"));
             this.background = ImageIO.read(new File("lib/background.png"));
+            this.foreground = ImageIO.read(new File("lib/foreground.png"));
             //this.birbImageSpriteCount = 0;
         } catch (IOException ex) {
             System.out.println("ex" + " Unable to load image");
@@ -55,8 +57,10 @@ public class GameConstraints extends JPanel {
     private void drawBirb(Graphics2D g){
         final Dimension d = this.getSize();
         //int offset = 46 * birbImageSpriteCount;
-        g.drawImage(background, 0, 0, 500,
-                500, 0, 0, 500,500, null);
+        g.drawImage(foreground,0,0,500, 500, 0,0,500, 500, null );
+
+        g.drawImage(background, 0, 0, 500, 425, 0, 0, 500,425, null);
+
 
         g.drawImage(birbImageSprite, birbPic.x, birbPic.y, birbPic.x + birbPic.width,
                 birbPic.y + birbPic.height, 0, 0, birbPic.width,birbPic.height, null);
