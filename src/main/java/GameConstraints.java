@@ -28,6 +28,10 @@ public class GameConstraints extends JPanel {
     //private int birbImageSpriteCount;
     //private Keyboard keyboard;
 
+    /**
+     * Loads in the images from lib catalog in a try-catch.
+     * If that fails it will print an exception.
+     */
     public GameConstraints() {
         super();
         try {
@@ -54,6 +58,10 @@ public class GameConstraints extends JPanel {
         drawBirb(g2d);
     }
 
+    /**
+     * Draws in both foreground and background, sets how many pixels they cover.
+     * @param g
+     */
     private void drawBirb(Graphics2D g){
         final Dimension d = this.getSize();
         //int offset = 46 * birbImageSpriteCount;
