@@ -9,7 +9,7 @@ public class Main {
     }
 
     private static void GameDisplay() {
-        JFrame frame = new JFrame("Flappy Birb");
+        JFrame frame = new JFrame("Jumpy Birb");
         frame.setBounds(100, 100, 500, 500);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
