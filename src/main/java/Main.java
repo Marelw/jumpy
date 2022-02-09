@@ -12,17 +12,9 @@ public class Main {
         JFrame frame = new JFrame("Jumpy Birb");
         frame.setBounds(100, 100, 500, 500);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // ImageIcon icon = new ImageIcon(new ImageIcon("lib/background.png").getImage());
         GameConstraints gC = new GameConstraints();
-        //frame.getContentPane().add(birb.getBirb());
-
-        //JLabel label = new JLabel(icon);
-        //JPanel panel = new JPanel();
-        //frame.add(panel);
-        // panel.add(label);
-        //useless comment for commit
         frame.add(gC);
 
 
