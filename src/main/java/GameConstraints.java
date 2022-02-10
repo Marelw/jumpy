@@ -35,7 +35,7 @@ public class GameConstraints extends JPanel {
     public GameConstraints() {
         super();
         try {
-            this.birbImageSprite = ImageIO.read(new File("lib/bird.png"));
+            this.birbImageSprite = ImageIO.read(new File("lib/jumpy-face.png"));
             this.setBackground(Color.CYAN);
             //this.birbImageSpriteCount = 0;
         } catch (IOException ex) {
@@ -45,7 +45,7 @@ public class GameConstraints extends JPanel {
         this.setBounds(10,10,WIDTH,HEIGHT);
         this.setOpaque(true);
 
-        this.birbPic = new Rectangle(140,200, 65, 50 );
+        this.birbPic = new Rectangle(140,200, 65, 55 );
     }
 
     @Override
