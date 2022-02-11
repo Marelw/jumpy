@@ -1,6 +1,7 @@
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 import javax.swing.JFrame;
+import java.awt.*;
 
 
 public class Main {
@@ -10,10 +11,11 @@ public class Main {
 
     private static void GameDisplay() {
         JFrame frame = new JFrame("Jumpy Birb");
-        frame.setBounds(100, 100, 500, 500);
+        frame.setSize(650, 650);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
         GameConstraints gC = new GameConstraints();
         frame.add(gC);
 
