@@ -18,8 +18,6 @@ public class Main {
         GameConstraints gC = new GameConstraints();
         //frame.getContentPane().add(birb.getBirb());
 
-        //hi
-
         //JLabel label = new JLabel(icon);
         //JPanel panel = new JPanel();
         //frame.add(panel);
