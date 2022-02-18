@@ -24,9 +24,6 @@ public class Main {
         // panel.add(label);
         //useless comment for commit
         frame.add(gC);
-
-
-
         frame.setVisible(true);
     }
 }
