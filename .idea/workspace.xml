@@ -4,25 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="00bc0a25-f607-4550-8d46-c6967c51ea90" name="Changes" comment="Pipe generator test.">
-      <change afterPath="$PROJECT_DIR$/src/test/java/CircleTimerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/DrawRectangleTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Game.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/GameConstraintsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Gunman.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/PipeGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/RandomShape.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Square.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/TimerTest.java" afterDir="false" />
+    <list default="true" id="00bc0a25-f607-4550-8d46-c6967c51ea90" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GameConstraints.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GameConstraints.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Pipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Pipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Pipes.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ImageExample.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/JFrameWindow.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/MainTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/MainTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/test.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,14 +61,8 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
   <component name="ProjectId" id="24SOZCb8KFf3DMqbItkmZHkxyue" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -98,7 +77,7 @@
       <recent name="C:\Users\marcu\Desktop\jumpy\lib" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Game">
+  <component name="RunManager" selected="Application.RandomShape">
     <configuration name="DrawRectangleTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="DrawRectangleTest" />
       <module name="jumpy" />
@@ -127,20 +106,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PipeTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="PipeTest" />
+    <configuration name="RandomShape" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="RandomShape" />
       <module name="jumpy" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.DrawRectangleTest" />
+      <item itemvalue="Application.Game" />
+      <item itemvalue="Application.Gunman" />
+      <item itemvalue="Application.MainTest" />
+      <item itemvalue="Application.RandomShape" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Game" />
+        <item itemvalue="Application.RandomShape" />
         <item itemvalue="Application.MainTest" />
+        <item itemvalue="Application.Game" />
         <item itemvalue="Application.Gunman" />
         <item itemvalue="Application.DrawRectangleTest" />
-        <item itemvalue="Application.PipeTest" />
       </list>
     </recent_temporary>
   </component>
@@ -203,7 +189,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/master" />
+                        <option value="origin/Oscar" />
                       </list>
                     </value>
                   </entry>
@@ -214,6 +200,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Adding different bird to lib" />
