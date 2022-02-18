@@ -1,32 +1,31 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class GameConstraints extends JPanel {
+public class GameConstraints extends JPanel implements ActionListener, KeyListener {
+
+    Timer timer;
+
+    // Panel size
+    final int PANEL_WIDTH = 600;
+    final int PANEL_HEIGHT = 525;
 
     /**
-     * Bird attributes
+     * Bird constants & attributes
      */
-    //private boolean isAlive = true;
-    //public double velocity;
-    //public double gravity;
-    //private int keyResponseDelay;
-    //private double birdShift;
+    private BufferedImage birdImageSprite;
+    int birdVelocity = 0;
+    double newVelocity = 4.0;
+    double posY = 200;
+    int posX = 200;
 
-    /**
-     * Bird constants
-     */
-    public final int HEIGHT = 400;
-    public final int WIDTH = 700;
-    private Rectangle birbPic;
-    private BufferedImage birbImageSprite;
-    private BufferedImage background;
-    private BufferedImage foreground;
-    //private int birbImageSpriteCount;
-    //private Keyboard keyboard;
 
 
     /**
@@ -34,19 +33,18 @@ public class GameConstraints extends JPanel {
      * If that fails it will print an exception.
      */
     public GameConstraints() {
-        super();
+
+        this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        this.setBackground(Color.ORANGE);
         try {
-            this.birbImageSprite = ImageIO.read(new File("lib/jumpy-face.png"));
-            this.setBackground(Color.BLUE);
-            //this.birbImageSpriteCount = 0;
+            this.birdImageSprite = ImageIO.read(new File("lib/jumpy-face.png"));
         } catch (IOException ex) {
             System.out.println("ex" + " Unable to load image");
         }
-
-        this.setBounds(10,10,WIDTH,HEIGHT);
-        this.setOpaque(true);
-
-        this.birbPic = new Rectangle(140,200, 65, 55 );
+        addKeyListener(this);
+        setFocusable(true);
+        timer = new Timer(1, this);
+        timer.start();
     }
 
     public void Pipe()  {
@@ -69,27 +67,33 @@ public class GameConstraints extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g;
-        drawBackground(g2d);
-        drawBirb(g2d);
-        drawPipes(g2d);
+        super.paintComponent(g);
+
+        Graphics2D g2D = (Graphics2D) g;
+
+        drawBird(g2D);
+
+        drawPipes(g2D);
     }
 
     /**
      * Draws in both foreground and background, sets how many pixels they cover.
-     * @param g
+     *
      */
-    private void drawBirb(Graphics2D g){
-        final Dimension d = this.getSize();
-        //int offset = 46 * birbImageSpriteCount;
+    private void drawBird(Graphics2D g2D) {
 
-        g.drawImage(birbImageSprite, birbPic.x, birbPic.y, birbPic.x + birbPic.width,
-                birbPic.y + birbPic.height, 0, 0, birbPic.width,birbPic.height, null);
+        if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
+            posY += birdVelocity;
+            // cant go above Panel/frame
+        }
+        g2D.drawImage(birdImageSprite, posX, (int) posY, null);
+
+
     }
 
-    private void drawPipes(Graphics2D g) {
+    private void drawPipes(Graphics2D g2D) {
         int lastPos = 550;
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g2D;
 
         int h = getHeight();
         int w = getWidth();
@@ -117,22 +121,36 @@ public class GameConstraints extends JPanel {
         lastPos = x;
     }
 
-    private void drawBackground(Graphics2D g){
-        g.drawImage(background, 0, 0, 650, 700, 0, 0, 650,700, null);
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
+            // GAME OVER, cant go under jpanel
+        } else {
+            posY += newVelocity;
+        }
+
+        repaint();
     }
 
-    /**
-     * @return If bird is alive
-     */
-    public boolean isAlive() {
-        return true;
+    @Override
+    public void keyTyped(KeyEvent e) {
+
     }
 
-    /**
-     * Kills bird
-     */
-    // public void kill() {
-    //     isAlive = false;
-    // }
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+            posY -= 100.0; // ändrar hur högt man hoppar
+            posY = Math.max(0, posY); // kan ej ta dig genom taket
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 
 }
