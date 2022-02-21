@@ -15,6 +15,8 @@ public class MainTest {
         frame.setResizable(true);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        //PipeTest pipeTest = new PipeTest();
+        //frame.add(pipeTest);
         PipeGenerator pipeGenerator = new PipeGenerator();
         frame.add(pipeGenerator);
         frame.setVisible(true);

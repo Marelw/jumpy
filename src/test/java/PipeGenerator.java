@@ -30,45 +30,31 @@ public class PipeGenerator extends JPanel{
     // Delayen på hur långt tid det ska ta att generera rektangeln
     private static final int TIMER_DELAY = 20;
 
-    //Rektangelns position (röd)
-    public int rectX = 400;
-    public int rectY = 300;
-
-    //Rektangel 2 position
-    public int rect2X = 400;
-    public int rect2Y = 0;
-
-    //Rektangelns mått
-    public int widthX = 50;
-    public int heightY = 200;
-
-    //Rektangel 2 mått
-    public int width2X = 50;
-    public int height2Y = 200;
-
     // Genereringen på rektangelns position
     private Timer timer = null;
 
+    private List<PipeCon> allPipes;
+
     // gör att pipes rör sig
     public PipeGenerator() {
+        allPipes = createPipeList();
+
         new Timer(TIMER_DELAY, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent actEvt) {
-                if (rectX < PREF_W && rectY < PREF_H
-                        && rect2X < PREF_W && rect2Y < PREF_H ) {
+                for (PipeCon p : allPipes) {
+                    if (p.rectX < PREF_W && p.rectY < PREF_H
+                            && p.rect2X < PREF_W && p.rect2Y < PREF_H ) {
 
-                    rectX--;
-                    rect2X--;
-
-                    repaint();
-                } else {
-                    ((Timer)actEvt.getSource()).stop();
+                        p.rectX--;
+                        p.rect2X--;
+                    }
                 }
+                repaint();
             }
         }).start();
     }
-
 
     @Override
     public Dimension getPreferredSize() {
@@ -76,27 +62,54 @@ public class PipeGenerator extends JPanel{
     }
 
     // Ritar rektangeln
-    public void paintComponent(Graphics g) {
+    @Override
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.red);
-        g.drawRect(rectX, rectY, widthX, heightY);
-        g.fillRect(rectX, rectY, widthX, heightY);
-
-        g.setColor(Color.blue);
-        g.drawRect(rect2X, rect2Y, width2X, height2Y);
-        g.fillRect(rect2X, rect2Y, width2X, height2Y);
+        for (PipeCon pipeCon: allPipes) {
+            pipeCon.drawPipe(g);
+        }
     }
 
-    public int getRectX() {
-        return rectX;
+    private List<PipeCon> createPipeList() {
+        List<PipeCon> list  = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+            int randXLoc = random.nextInt(PREF_W);
+            int randomDelayedStart = random.nextInt(100);
+            list.add(new PipeCon(randXLoc, randomDelayedStart));
+        }
+        return list;
     }
 
-    public void setRectX(int rectX) {
-        this.rectX = rectX;
+}
+
+class PipeCon {
+    // Rektangel 1 position
+    public int rectX = 400;
+    public int rectY = 300;
+
+    //Rektangel 2 position
+    public int rect2X = 400;
+    public int rect2Y = 0;
+
+    int randXLoc;
+    int randomDelayStart;
+
+    public PipeCon(int randXLoc, int randomDelayStart){
+        this.randXLoc = randXLoc;
+        this.randomDelayStart = randomDelayStart;
     }
 
-    public int getRectY() {
-        return rectY;
+
+    public void drawPipe(Graphics g) {
+         g.setColor(Color.red);
+         g.drawRect(rectX, rectY, 50, 100);
+         g.fillRect(rectX, rectY, 50, 100);
+
+         g.setColor(Color.blue);
+         g.drawRect(rect2X, rect2Y, 50, 100);
+         g.fillRect(rect2X, rect2Y, 50, 100);
     }
+
 }
 
