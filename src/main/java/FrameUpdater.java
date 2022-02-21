@@ -4,8 +4,9 @@ import javax.swing.SwingUtilities;
  * This thread will try to run update() and repaint() on the given
  * GameSurface in accorance with the given fps. If the update() and
  * repaint() methods take too much time it will trigger as often as it
- * can, possibly running update() and repainting at the same time.
- */
+ * can, possibly running update() and repainting at the same time.*/
+
+
 
 public class FrameUpdater extends Thread {
     private final long timeBetweenUpdates;
