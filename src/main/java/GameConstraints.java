@@ -115,11 +115,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     }
 
     public void update(int time) {
-        addObsticle();
+        addObstacle();
 
     }
 
-    private void addObsticle() {
+    private void addObstacle() {
 
         pipeDelay--;
 
