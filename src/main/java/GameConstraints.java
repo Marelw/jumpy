@@ -56,6 +56,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         this.updater.setDaemon(true); // it should not keep the app running
         this.updater.start();
 
+        addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
         timer = new Timer(10, this);
