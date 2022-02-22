@@ -1,7 +1,4 @@
 public class Obstacle {
-    //public final int created;
-    //public final Rectangle bounds;
-    public boolean invalid = false;
 
     public String Direction;
     public int x;
@@ -19,8 +16,8 @@ public class Obstacle {
         height = 400;
         x = GameConstraints.PANEL_WIDTH + 2;
 
-        if (Direction.equals("south")) {
-            y = -(int)(Math.random() * 120) - height / 2;
+        if (Direction.equals("floor")) {
+            y = -(int)(Math.random() * 100) - height / 2; //GAP PLACEMENT , Kan användas för att ändra svårighetsgrad senare
         }
     }
 
