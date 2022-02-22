@@ -1,17 +1,14 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class GameConstraints extends JPanel implements ActionListener, KeyListener {
+public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
 
 
     Timer timer;
@@ -165,7 +162,23 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        birbJump();
+    }
 
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+            birbJump();
+        }
+    }
+
+    private void birbJump() {
+        posY -= 80.0; // ändrar hur högt man hoppar
+        posY = Math.max(0, posY); // kan ej ta dig genom taket
+    }
 
 
     @Override
@@ -173,20 +186,33 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-            posY -= 80.0; // ändrar hur högt man hoppar
-            posY = Math.max(0, posY); // kan ej ta dig genom taket
-        }
-    }
 
     @Override
     public void keyReleased(KeyEvent e) {
 
     }
 
-   // writing useless shit for git
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    // writing useless shit for git
 
 }
