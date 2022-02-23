@@ -47,7 +47,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
         try {
-            this.birdImageSprite = ImageIO.read(new File("lib/jumpy-face.png"));
+            this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
         } catch (IOException ex) {
             System.out.println("ex" + " Unable to load image");
         }
@@ -59,7 +59,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
-        timer = new Timer(10, this);
+        timer = new Timer(15, this);
         timer.start();
     }
 
