@@ -26,6 +26,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     double posY = 200;
     int posX = 200;
 
+    public Boolean gameOver;
+
 
     private transient FrameUpdater updater;
     private java.util.List<Obstacle> obstacles;
@@ -46,8 +48,10 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
+        this.gameOver = false;
         try {
             this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
+            //this.birdImageSpriteCount = 0;
         } catch (IOException ex) {
             System.out.println("ex" + " Unable to load image");
         }
@@ -59,20 +63,17 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
-        timer = new Timer(15, this);
+        timer = new Timer(20, this);
         timer.start();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-
         drawBird(g2D);
-
         drawPipes(g2D);
     }
 
@@ -81,14 +82,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      *
      */
     private void drawBird(Graphics2D g2D) {
-
         if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
             posY += birdVelocity;
-            // cant go above Panel/frame
+            // cant go above Panel/frame gameOver??
         }
         g2D.drawImage(birdImageSprite, posX, (int) posY, null);
-
-
     }
 
     private void drawPipes(Graphics2D g2D) {
@@ -98,69 +96,81 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         }
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
-            // GAME OVER, cant go under jpanel
+            gameOver = true;
         } else {
             posY += newVelocity;
         }
-
-
         repaint();
     }
 
     public void update(int time) {
+        if (gameOver) {
+            updater.interrupt();
+            timer.stop(); // fungerar ej
+            return;
+        }
         addObstacle();
-
+        checkForCollisions();
     }
 
     private void addObstacle() {
-
         pipeDelay--;
 
         if (pipeDelay < 0) {
             pipeDelay = PIPE_DELAY;
-            Obstacle ceilingObstecle = null;
-            Obstacle floorObstecle = null;
+            Obstacle ceilingObstacle = null;
+            Obstacle floorObstacle = null;
 
             // Look for pipes off the screen
             for (Obstacle obstacle : obstacles) {
                 if (obstacle.x - obstacle.width < 0) {
-                    if (ceilingObstecle == null) {
-                        ceilingObstecle = obstacle;
-                    } else if (floorObstecle == null) {
-                        floorObstecle = obstacle;
+                    if (ceilingObstacle == null) {
+                        ceilingObstacle = obstacle;
+                    } else if (floorObstacle == null) {
+                        floorObstacle = obstacle;
                         break;
                     }
                 }
             }
 
-            if (ceilingObstecle == null) {
+            if (ceilingObstacle == null) {
                 Obstacle obstacle = new Obstacle("cieling");
                 obstacles.add(obstacle);
-                ceilingObstecle = obstacle;
+                ceilingObstacle = obstacle;
             } else {
-                ceilingObstecle.reset();
+                ceilingObstacle.reset();
             }
 
-            if (floorObstecle == null) {
+            if (floorObstacle == null) {
                 Obstacle obstacle = new Obstacle("floor");
                 obstacles.add(obstacle);
-                floorObstecle = obstacle;
+                floorObstacle = obstacle;
             } else {
-                floorObstecle.reset();
+                floorObstacle.reset();
             }
 
-            ceilingObstecle.y = floorObstecle.y + floorObstecle.height + 175;
+            ceilingObstacle.y = floorObstacle.y + floorObstacle.height + 175;
         }
 
         for (Obstacle obstacle : obstacles) {
             obstacle.update();
         }
 
+    }
+    private void checkForCollisions() {
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.collides(posX, (int) posY, birdImageSprite.getWidth(), birdImageSprite.getHeight())) {
+                gameOver = true;
+                try {
+                    Thread.sleep(1000000000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
@@ -177,22 +187,19 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     }
 
     private void birbJump() {
-        posY -= 80.0; // ändrar hur högt man hoppar
+        posY -= 70.5; // ändrar hur högt man hoppar
         posY = Math.max(0, posY); // kan ej ta dig genom taket
     }
-
 
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
 
-
     @Override
     public void keyReleased(KeyEvent e) {
 
     }
-
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -213,7 +220,5 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public void mouseExited(MouseEvent e) {
 
     }
-
-    // writing useless shit for git
 
 }

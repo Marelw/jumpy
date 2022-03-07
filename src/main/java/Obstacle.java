@@ -1,6 +1,6 @@
 public class Obstacle {
 
-    public String Direction;
+    public String direction;
     public int x;
     public int y;
     public int width;
@@ -8,7 +8,7 @@ public class Obstacle {
     public int speed = 3;
 
     public Obstacle(String direction) {
-        this.Direction = direction;
+        this.direction = direction;
         reset();
     }
     public void reset() {
@@ -16,12 +16,43 @@ public class Obstacle {
         height = 400;
         x = GameConstraints.PANEL_WIDTH + 2;
 
-        if (Direction.equals("floor")) {
+        if (direction.equals("floor")) {
             y = -(int)(Math.random() * 100) - height / 2; //GAP PLACEMENT , Kan användas för att ändra svårighetsgrad senare
         }
     }
 
     public void update() {
         x -= speed;
+    }
+
+    public boolean collides(int birdX, int birdY, int birdWidth, int birdHeight) {
+
+        int margin = 0;
+
+        if (inbetweenX(birdX - margin) || inbetweenX(birdX + birdWidth + margin)) {
+
+            if(inbetweenY(birdY - margin) || inbetweenY(birdY + birdHeight + margin)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean inbetween(int objectX, int mypos, int length) { //faktorisera mera
+        return objectX > mypos && objectX < mypos + length;
+    }
+
+    private boolean inbetweenX(int objectX) {
+        if (objectX > x && objectX < x + width) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean inbetweenY(int objectY) {
+        if (objectY > y && objectY < y + height) {
+            return true;
+        }
+        return false;
     }
 }

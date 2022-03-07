@@ -1,4 +1,4 @@
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class FrameUpdater extends Thread {
     private final long timeBetweenUpdates;
