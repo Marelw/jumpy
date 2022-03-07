@@ -35,7 +35,12 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private int restartDelay; // för restart
     private int pipeDelay;
 
+    private enum STATE {
+        MENU,
+        GAME
+    };
 
+    private STATE State = STATE.MENU;
 
 
     /**
@@ -44,23 +49,42 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
+
+
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
         try {
             this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
         } catch (IOException ex) {
-            System.out.println("ex" + " Unable to load image");
+            System.out.println(ex + " Unable to load image");
         }
+
+
+        GameMenu();
+
+
         this.obstacles = new ArrayList<>();
         this.updater = new FrameUpdater(this, 60);
         this.updater.setDaemon(true); // it should not keep the app running
-        this.updater.start();
+        if (State == STATE.GAME){
+            this.updater.start();
+        }
 
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
         timer = new Timer(15, this);
-        timer.start();
+        if (State == STATE.GAME){
+            timer.start();
+        }
+    }
+
+    private void GameMenu() {
+        JButton start = new JButton("Start");
+        this.add(start);
+        start.setMnemonic(KeyEvent.VK_S);
+        start.setActionCommand("Start");
+        start.addActionListener(this);
     }
 
     @Override
@@ -102,6 +126,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        if("Start".equals(e.getActionCommand())){
+            timer.start();
+            this.updater.start();
+        }
+
         if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
             // GAME OVER, cant go under jpanel
         } else {
@@ -114,7 +143,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     public void update(int time) {
         addObstacle();
-
     }
 
     private void addObstacle() {
@@ -165,7 +193,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        birbJump();
+
+        if (e.getButton() == MouseEvent.BUTTON1){
+            birbJump();
+        }
+
     }
 
     @Override
@@ -174,6 +206,10 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         if(e.getKeyCode() == KeyEvent.VK_SPACE) {
             birbJump();
         }
+
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        }
     }
 
     private void birbJump() {
@@ -181,18 +217,15 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         posY = Math.max(0, posY); // kan ej ta dig genom taket
     }
 
-
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
 
-
     @Override
     public void keyReleased(KeyEvent e) {
 
     }
-
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -214,6 +247,5 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     }
 
-    // writing useless shit for git
 
 }
