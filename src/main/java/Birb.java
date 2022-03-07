@@ -1,6 +1,4 @@
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.Serializable;
 
 public class Birb implements Serializable {
@@ -36,8 +34,8 @@ public class Birb implements Serializable {
         velocity -= GRAVITY * deltaTime;
     }
 
-    public void paint(Graphics g) {
-        g.setColor(Color.MAGENTA);
-        g.fillRect((int)box.getX(), (int)box.getY(), (int)box.getWidth(), (int)box.getHeight());
+    public void paint(Graphics2D g2D) {
+        g2D.setColor(Color.MAGENTA);
+        g2D.fillRect((int)box.getX(), (int)box.getY(), (int)box.getWidth(), (int)box.getHeight());
     }
 }

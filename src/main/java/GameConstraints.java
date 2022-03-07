@@ -101,10 +101,12 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
         Graphics2D g2D = (Graphics2D) g;
         //drawBird(g2D);
+
+        // Ritar över allt man gör i drapPipes. Anropar aldrig metoden som lägger hinder!!!
+        //g.fillRect(0, 0, d.width, d.height);
+        birb.paint(g2D);
         drawPipes(g2D);
 
-        g.fillRect(0, 0, d.width, d.height);
-        birb.paint(g);
     }
 
     /**
@@ -124,9 +126,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         g2D.drawImage(birdImageSprite, posX, (int) posY, null);
 
     }
-
-
-
 
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
