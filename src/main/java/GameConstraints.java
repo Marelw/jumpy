@@ -187,8 +187,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     }
 
     private void birbJump() {
+
+        if(!gameOver) {
         posY -= 70.5; // ändrar hur högt man hoppar
         posY = Math.max(0, posY); // kan ej ta dig genom taket
+        }
     }
 
     @Override
