@@ -59,8 +59,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             System.out.println(ex + " Unable to load image");
         }
 
-
-        GameMenu();
+        if (State == STATE.MENU){
+            GameMenu();
+        }
 
 
         this.obstacles = new ArrayList<>();
@@ -85,6 +86,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         start.setMnemonic(KeyEvent.VK_S);
         start.setActionCommand("Start");
         start.addActionListener(this);
+        start.setFocusable(false);
+
+
     }
 
     @Override
@@ -193,23 +197,21 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-        if (e.getButton() == MouseEvent.BUTTON1){
+        if (e.getButton() == MouseEvent.BUTTON1) {
             birbJump();
         }
-
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             birbJump();
         }
 
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
+
     }
 
     private void birbJump() {
