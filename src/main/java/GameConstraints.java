@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
-
-
     Timer timer;
 
     // Panel size
@@ -21,7 +19,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      * Bird constants & attributes
      */
     private BufferedImage birdImageSprite;
-    int birdVelocity = 0;
+    // int birdVelocity = 0;
     double newVelocity = 4.0;
     double posY = 200;
     int posX = 200;
@@ -34,6 +32,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private int pauseDelay; // om vi ska kunna pausa
     private int restartDelay; // för restart
     private int pipeDelay;
+
+    private final Birb birb = new Birb();
 
     private enum STATE {
         MENU,
@@ -49,8 +49,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
-
-
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
         try {
@@ -60,8 +58,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         }
 
 
-        GameMenu();
-
+        //GameMenu();
 
         this.obstacles = new ArrayList<>();
         this.updater = new FrameUpdater(this, 60);
@@ -70,15 +67,21 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             this.updater.start();
         }
 
+        // All key events
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
-        timer = new Timer(15, this);
-        if (State == STATE.GAME){
-            timer.start();
-        }
+
+
+        Timer timer = new Timer(10, e -> {
+            long time = System.nanoTime();
+            birb.tick(time);
+            repaint();
+        });
+        timer.start();
     }
 
+    /*
     private void GameMenu() {
         JButton start = new JButton("Start");
         this.add(start);
@@ -87,33 +90,43 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         start.addActionListener(this);
     }
 
+     */
+
+    // Will draw
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        final Dimension d = this.getSize();
 
-        super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-
-        drawBird(g2D);
-
+        //drawBird(g2D);
         drawPipes(g2D);
+
+        g.fillRect(0, 0, d.width, d.height);
+        birb.paint(g);
     }
 
     /**
      * Draws in both foreground and background, sets how many pixels they cover.
      *
      */
+
+
     private void drawBird(Graphics2D g2D) {
 
         if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
-            posY += birdVelocity;
-            // cant go above Panel/frame
+            posY += 4;
         }
+
+        // Den är anledningen till varför den inte hoppar "smooth".
+        //g2D.drawImage(bilden, x-axeln, y-axeln, null);
         g2D.drawImage(birdImageSprite, posX, (int) posY, null);
 
-
     }
+
+
+
 
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
@@ -136,8 +149,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         } else {
             posY += newVelocity;
         }
-
-
         repaint();
     }
 
@@ -193,16 +204,17 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+    /*
         if (e.getButton() == MouseEvent.BUTTON1){
             birbJump();
         }
-
+     */
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
 
+        /*
         if(e.getKeyCode() == KeyEvent.VK_SPACE) {
             birbJump();
         }
@@ -210,12 +222,21 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
+
+         */
+        final int kc = e.getKeyCode();
+        if (kc == KeyEvent.VK_SPACE) {
+            final long time = System.nanoTime();
+            birb.jump(time);
+        }
     }
 
+    /*
     private void birbJump() {
         posY -= 80.0; // ändrar hur högt man hoppar
         posY = Math.max(0, posY); // kan ej ta dig genom taket
     }
+    */
 
     @Override
     public void keyTyped(KeyEvent e) {
