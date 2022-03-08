@@ -95,8 +95,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        super.paintComponent(g);
-
         Graphics2D g2D = (Graphics2D) g;
 
         drawBird(g2D);
@@ -131,8 +129,10 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public void actionPerformed(ActionEvent e) {
 
         if("Start".equals(e.getActionCommand())){
+            State = STATE.GAME;
             timer.start();
             this.updater.start();
+            ((JButton)e.getSource()).setVisible(false);
         }
 
         if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
