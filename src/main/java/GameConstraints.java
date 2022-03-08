@@ -89,7 +89,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         start.setActionCommand("Start");
         start.addActionListener(this);
     }
-
      */
 
     // Will draw
@@ -205,11 +204,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         if(e.getKeyCode() == KeyEvent.VK_SPACE) {
             birbJump();
         }
-
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
-
          */
         final int kc = e.getKeyCode();
         if (kc == KeyEvent.VK_SPACE) {
