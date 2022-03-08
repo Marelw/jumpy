@@ -1,46 +1,25 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-<<<<<<<<< Temporary merge branch 1
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-=========
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
->>>>>>>>> Temporary merge branch 2
 
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
-
-
     Timer timer;
 
     // Panel size
     public static final int PANEL_WIDTH = 600;
     final int PANEL_HEIGHT = 525;
 
-<<<<<<<<< Temporary merge branch 1
-    public final int HEIGHT = 400;
-    public final int WIDTH = 700;
-    private Rectangle birbPic;
-    private BufferedImage birbImageSprite;
-    private BufferedImage background;
-    private BufferedImage foreground;
-    private List<Pipe> pipes;
-    private Timer timer = null;
-=========
     /**
      * Bird constants & attributes
      */
     private BufferedImage birdImageSprite;
-    int birdVelocity = 0;
+    // int birdVelocity = 0;
     double newVelocity = 4.0;
     double posY = 200;
     int posX = 200;
@@ -54,9 +33,20 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private int restartDelay; // för restart
     private int pipeDelay;
 
+    private final Birb birb = new Birb();
 
->>>>>>>>> Temporary merge branch 2
+    private enum STATE {
+        MENU,
+        GAME
+    };
 
+    private STATE State = STATE.MENU;
+
+
+    /**
+     * Loads in the images from lib catalog in a try-catch.
+     * If that fails it will print an exception.
+     */
     public GameConstraints() {
 
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -64,75 +54,78 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         try {
             this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
         } catch (IOException ex) {
-            System.out.println("ex" + " Unable to load image");
+            System.out.println(ex + " Unable to load image");
         }
+
+
+        //GameMenu();
+
         this.obstacles = new ArrayList<>();
         this.updater = new FrameUpdater(this, 60);
         this.updater.setDaemon(true); // it should not keep the app running
-        this.updater.start();
+        if (State == STATE.GAME){
+            this.updater.start();
+        }
 
-<<<<<<<<< Temporary merge branch 1
-        this.setBounds(10,10,WIDTH,HEIGHT);
-        this.setOpaque(true);
-
-        this.birbPic = new Rectangle(140,200, 65, 55 );
-
-=========
+        // All key events
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
-        timer = new Timer(15, this);
+
+
+        Timer timer = new Timer(10, e -> {
+            long time = System.nanoTime();
+            birb.tick(time);
+            repaint();
+        });
         timer.start();
->>>>>>>>> Temporary merge branch 2
     }
 
+    /*
+    private void GameMenu() {
+        JButton start = new JButton("Start");
+        this.add(start);
+        start.setMnemonic(KeyEvent.VK_S);
+        start.setActionCommand("Start");
+        start.addActionListener(this);
+    }
+     */
+
+    // Will draw
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-<<<<<<<<< Temporary merge branch 1
-        Graphics2D g2d = (Graphics2D) g;
-        drawBackground(g2d);
-        drawBirb(g2d);
-        drawPipes(g2d);
-
-    }
-
-    private void drawBirb(Graphics2D g){
         final Dimension d = this.getSize();
-        //int offset = 46 * birbImageSpriteCount;
-=========
-        super.paintComponent(g);
+
 
         Graphics2D g2D = (Graphics2D) g;
+        //drawBird(g2D);
 
-        drawBird(g2D);
-
+        // Ritar över allt man gör i drapPipes. Anropar aldrig metoden som lägger hinder!!!
+        //g.fillRect(0, 0, d.width, d.height);
+        birb.paint(g2D);
         drawPipes(g2D);
+
     }
 
     /**
      * Draws in both foreground and background, sets how many pixels they cover.
      *
      */
+
+
     private void drawBird(Graphics2D g2D) {
 
         if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
-            posY += birdVelocity;
-            // cant go above Panel/frame
+            posY += 4;
         }
-        g2D.drawImage(birdImageSprite, posX, (int) posY, null);
 
->>>>>>>>> Temporary merge branch 2
+        // Den är anledningen till varför den inte hoppar "smooth".
+        //g2D.drawImage(bilden, x-axeln, y-axeln, null);
+        g2D.drawImage(birdImageSprite, posX, (int) posY, null);
 
     }
 
-<<<<<<<<< Temporary merge branch 1
-    private void drawPipes(Graphics2D g) {
-        final Dimension d  = this.getSize();
-
-
-=========
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
             g2D.setColor(Color.MAGENTA);
@@ -144,24 +137,23 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        if("Start".equals(e.getActionCommand())){
+            timer.start();
+            this.updater.start();
+        }
+
         if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
             // GAME OVER, cant go under jpanel
         } else {
             posY += newVelocity;
         }
-
-
         repaint();
->>>>>>>>> Temporary merge branch 2
     }
 
     public void update(int time) {
         addObstacle();
-
     }
 
-<<<<<<<<< Temporary merge branch 1
-=========
     private void addObstacle() {
 
         pipeDelay--;
@@ -210,34 +202,47 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        birbJump();
+    /*
+        if (e.getButton() == MouseEvent.BUTTON1){
+            birbJump();
+        }
+     */
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
 
+        /*
         if(e.getKeyCode() == KeyEvent.VK_SPACE) {
             birbJump();
         }
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        }
+         */
+        final int kc = e.getKeyCode();
+        if (kc == KeyEvent.VK_SPACE) {
+            final long time = System.nanoTime();
+            birb.jump(time);
+        }
     }
 
+    /*
     private void birbJump() {
         posY -= 80.0; // ändrar hur högt man hoppar
         posY = Math.max(0, posY); // kan ej ta dig genom taket
     }
-
+    */
 
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
 
-
     @Override
     public void keyReleased(KeyEvent e) {
 
     }
-
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -259,7 +264,5 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     }
 
-    // writing useless shit for git
 
->>>>>>>>> Temporary merge branch 2
 }
