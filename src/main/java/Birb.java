@@ -1,4 +1,8 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 public class Birb implements Serializable {
@@ -14,6 +18,18 @@ public class Birb implements Serializable {
 
     // this is just here to keep it still until first jump
     private boolean started = false;
+
+    double posY = 200;
+    int posX = 200;
+
+    // Panel size
+    public static final int PANEL_WIDTH = 600;
+    final int PANEL_HEIGHT = 525;
+
+    private BufferedImage birdImageSprite;
+
+    int birdVelocity = 0;
+
 
     public void jump(long time) {
         started = true;
@@ -35,7 +51,27 @@ public class Birb implements Serializable {
     }
 
     public void paint(Graphics2D g2D) {
+        try {
+            this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
+        } catch (IOException ex) {
+            System.out.println(ex + " Unable to load image");
+        }
+    /*
+        if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
+            posY += birdVelocity;
+            // cant go above Panel/frame
+
+        }
+    */
+
+        g2D.drawImage(birdImageSprite, posX, (int) posY, null);
+
+
+
+
         g2D.setColor(Color.MAGENTA);
         g2D.fillRect((int)box.getX(), (int)box.getY(), (int)box.getWidth(), (int)box.getHeight());
+
     }
+
 }

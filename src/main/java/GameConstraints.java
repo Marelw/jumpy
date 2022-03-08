@@ -115,18 +115,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
 
 
-    private void drawBird(Graphics2D g2D) {
-
-        if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
-            posY += 4;
-        }
-
-        // Den är anledningen till varför den inte hoppar "smooth".
-        //g2D.drawImage(bilden, x-axeln, y-axeln, null);
-        g2D.drawImage(birdImageSprite, posX, (int) posY, null);
-
-    }
-
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
             g2D.setColor(Color.MAGENTA);
