@@ -1,11 +1,20 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+<<<<<<<<< Temporary merge branch 1
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+=========
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+>>>>>>>>> Temporary merge branch 2
 
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
@@ -17,6 +26,16 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public static final int PANEL_WIDTH = 600;
     final int PANEL_HEIGHT = 525;
 
+<<<<<<<<< Temporary merge branch 1
+    public final int HEIGHT = 400;
+    public final int WIDTH = 700;
+    private Rectangle birbPic;
+    private BufferedImage birbImageSprite;
+    private BufferedImage background;
+    private BufferedImage foreground;
+    private List<Pipe> pipes;
+    private Timer timer = null;
+=========
     /**
      * Bird constants & attributes
      */
@@ -36,12 +55,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private int pipeDelay;
 
 
+>>>>>>>>> Temporary merge branch 2
 
-
-    /**
-     * Loads in the images from lib catalog in a try-catch.
-     * If that fails it will print an exception.
-     */
     public GameConstraints() {
 
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -56,17 +71,37 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         this.updater.setDaemon(true); // it should not keep the app running
         this.updater.start();
 
+<<<<<<<<< Temporary merge branch 1
+        this.setBounds(10,10,WIDTH,HEIGHT);
+        this.setOpaque(true);
+
+        this.birbPic = new Rectangle(140,200, 65, 55 );
+
+=========
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
         timer = new Timer(15, this);
         timer.start();
+>>>>>>>>> Temporary merge branch 2
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+<<<<<<<<< Temporary merge branch 1
+        Graphics2D g2d = (Graphics2D) g;
+        drawBackground(g2d);
+        drawBirb(g2d);
+        drawPipes(g2d);
+
+    }
+
+    private void drawBirb(Graphics2D g){
+        final Dimension d = this.getSize();
+        //int offset = 46 * birbImageSpriteCount;
+=========
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
@@ -88,9 +123,16 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         }
         g2D.drawImage(birdImageSprite, posX, (int) posY, null);
 
+>>>>>>>>> Temporary merge branch 2
 
     }
 
+<<<<<<<<< Temporary merge branch 1
+    private void drawPipes(Graphics2D g) {
+        final Dimension d  = this.getSize();
+
+
+=========
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
             g2D.setColor(Color.MAGENTA);
@@ -110,6 +152,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
 
         repaint();
+>>>>>>>>> Temporary merge branch 2
     }
 
     public void update(int time) {
@@ -117,6 +160,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     }
 
+<<<<<<<<< Temporary merge branch 1
+=========
     private void addObstacle() {
 
         pipeDelay--;
@@ -216,4 +261,5 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     // writing useless shit for git
 
+>>>>>>>>> Temporary merge branch 2
 }
