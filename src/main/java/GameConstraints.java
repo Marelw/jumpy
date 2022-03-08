@@ -37,7 +37,12 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private int restartDelay; // för restart
     private int pipeDelay;
 
+    private enum STATE {
+        MENU,
+        GAME
+    };
 
+    private STATE State = STATE.MENU;
 
 
     /**
@@ -46,6 +51,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
+
+
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
         this.gameOver = false;
@@ -53,23 +60,43 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
             //this.birdImageSpriteCount = 0;
         } catch (IOException ex) {
-            System.out.println("ex" + " Unable to load image");
+            System.out.println(ex + " Unable to load image");
         }
+
+        if (State == STATE.MENU){
+            GameMenu();
+        }
+
+
         this.obstacles = new ArrayList<>();
         this.updater = new FrameUpdater(this, 60);
         this.updater.setDaemon(true); // it should not keep the app running
-        this.updater.start();
+        if (State == STATE.GAME){
+            this.updater.start();
+        }
 
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
-        timer = new Timer(20, this);
-        timer.start();
+        timer = new Timer(15, this);
+        if (State == STATE.GAME){
+            timer.start();
+        }
+    }
+
+    private void GameMenu() {
+        JButton start = new JButton("Start");
+        this.add(start);
+        start.setMnemonic(KeyEvent.VK_S);
+        start.setActionCommand("Start");
+        start.addActionListener(this);
+        start.setFocusable(false);
+
+
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
@@ -98,6 +125,14 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+        if("Start".equals(e.getActionCommand())){
+            State = STATE.GAME;
+            timer.start();
+            this.updater.start();
+            ((JButton)e.getSource()).setVisible(false);
+        }
+
         if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
             gameOver = true;
         } else {
@@ -175,22 +210,28 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        birbJump();
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            birbJump();
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             birbJump();
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        }
+
     }
 
     private void birbJump() {
 
         if(!gameOver) {
-        posY -= 70.5; // ändrar hur högt man hoppar
-        posY = Math.max(0, posY); // kan ej ta dig genom taket
+            posY -= 70.5; // ändrar hur högt man hoppar
+            posY = Math.max(0, posY); // kan ej ta dig genom taket
         }
     }
 
@@ -223,5 +264,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public void mouseExited(MouseEvent e) {
 
     }
+
 
 }
