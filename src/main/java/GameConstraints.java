@@ -25,9 +25,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     double newVelocity = 4.0;
     double posY = 200;
     int posX = 200;
+    int score = 0;
 
     public Boolean gameOver;
-
 
     private transient FrameUpdater updater;
     private java.util.List<Obstacle> obstacles;
@@ -204,9 +204,13 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            } else if(obstacle.x == posX && obstacle.direction.equalsIgnoreCase("floor")) {
+                score++;
+                System.out.println(score);
             }
         }
     }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
