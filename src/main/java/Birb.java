@@ -9,7 +9,7 @@ public class Birb implements Serializable {
     private static final long serialVersionUID = 126058262246325L;
 
     private static final double GRAVITY = 90;
-    private static final double TIME_SCALE = 10_000_000L;
+    private static final double TIME_SCALE = 30L;
     private static final double NANOSECOND = 1_000_000_000L;
 
     private final Rectangle box = new Rectangle(220, 180, 40, 40);
@@ -36,6 +36,7 @@ public class Birb implements Serializable {
 
         // using this if we can only jump on the way down
         if (velocity <= 0) {
+            jumpStart = time;
             velocity = 100;
         }
     }
@@ -46,23 +47,14 @@ public class Birb implements Serializable {
         }
 
         double deltaTime = ((time - jumpStart) / NANOSECOND) / TIME_SCALE;
+        System.out.println(deltaTime);
         box.y -= velocity * deltaTime;
         velocity -= GRAVITY * deltaTime;
     }
 
     public void paint(Graphics2D g2D) {
-        try {
-            this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
-        } catch (IOException ex) {
-            System.out.println(ex + " Unable to load image");
-        }
-    /*
-        if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
-            posY += birdVelocity;
-            // cant go above Panel/frame
 
-        }
-    */
+    // intersect
 
         g2D.drawImage(birdImageSprite, posX, (int) posY, null);
 

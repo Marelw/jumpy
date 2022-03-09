@@ -51,11 +51,14 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
+        /*
         try {
             this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
         } catch (IOException ex) {
-            System.out.println(ex + " Unable to load image");
+           // System.out.println(ex + " Unable to load image");
         }
+
+         */
 
 
         //GameMenu();
@@ -73,7 +76,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         setFocusable(true);
 
 
-        Timer timer = new Timer(10, e -> {
+        Timer timer = new Timer(2, e -> {
             long time = System.nanoTime();
             birb.tick(time);
             repaint();
@@ -214,13 +217,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             birb.jump(time);
         }
     }
-
-    /*
-    private void birbJump() {
-        posY -= 80.0; // ändrar hur högt man hoppar
-        posY = Math.max(0, posY); // kan ej ta dig genom taket
-    }
-    */
 
     @Override
     public void keyTyped(KeyEvent e) {
