@@ -68,7 +68,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             GameMenu();
         }
 
-        //GameMenu();
 
         this.obstacles = new ArrayList<>();
         this.updater = new FrameUpdater(this, 60);
@@ -91,7 +90,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         timer.start();
     }
 
-    /*
+
     private void GameMenu() {
         JButton start = new JButton("Start");
         this.add(start);
@@ -102,7 +101,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
 
     }
-     */
+
 
     // Will draw
     @Override
@@ -230,24 +229,21 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void mouseClicked(MouseEvent e) {
-    /*
         if (e.getButton() == MouseEvent.BUTTON1){
-            birbJump();
+            final long time = System.nanoTime();
+            birb.jump(time);
         }
-     */
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
 
-        /*
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-            birbJump();
-        }
+
+
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
-         */
+
         final int kc = e.getKeyCode();
         if (kc == KeyEvent.VK_SPACE) {
             final long time = System.nanoTime();
