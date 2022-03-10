@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
-    Timer timer;
+    private Timer timer;
 
     // Panel size
     public static final int PANEL_WIDTH = 600;
@@ -24,10 +24,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     double posY = 200;
     int posX = 200;
 
-    public Boolean gameOver;
+    public boolean gameOver;
 
 
-    private transient FrameUpdater updater;
     private java.util.List<Obstacle> obstacles;
 
     public static final int PIPE_DELAY = 100;
@@ -51,30 +50,21 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
-        this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-        this.setBackground(Color.ORANGE);
-        /*
-        this.gameOver = false;
         try {
-            this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
+            birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
             //this.birdImageSpriteCount = 0;
         } catch (IOException ex) {
-           // System.out.println(ex + " Unable to load image");
+            // System.out.println(ex + " Unable to load image");
         }
 
-         */
+        this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        this.setBackground(Color.ORANGE);
 
         if (State == STATE.MENU){
             GameMenu();
         }
 
-
         this.obstacles = new ArrayList<>();
-        this.updater = new FrameUpdater(this, 60);
-        this.updater.setDaemon(true); // it should not keep the app running
-        if (State == STATE.GAME){
-            this.updater.start();
-        }
 
         // All key events
         addMouseListener(this);
@@ -82,12 +72,12 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         setFocusable(true);
 
 
-        Timer timer = new Timer(2, e -> {
+        this.timer = new Timer(2, e -> {
             long time = System.nanoTime();
             birb.tick(time);
             repaint();
+            // System.out.println("tick");
         });
-        timer.start();
     }
 
 
@@ -99,47 +89,27 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         start.addActionListener(this);
         start.setFocusable(false);
 
-
     }
 
-
-    // Will draw
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         final Dimension d = this.getSize();
 
-
         Graphics2D g2D = (Graphics2D) g;
-        //drawBird(g2D);
 
         // Ritar över allt man gör i drapPipes. Anropar aldrig metoden som lägger hinder!!!
-        //g.fillRect(0, 0, d.width, d.height);
         birb.paint(g2D);
         drawPipes(g2D);
 
     }
-
-    /**
-     * Draws in both foreground and background, sets how many pixels they cover.
-     *
-     */
-    /*private void drawBird(Graphics2D g2D) {
-
-        if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
-            posY += birdVelocity;
-            // cant go above Panel/frame
-        }
-        g2D.drawImage(birdImageSprite, posX, (int) posY, null);
-    }
-*/
-
 
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
             g2D.setColor(Color.MAGENTA);
             g2D.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
         }
+        update(10); // Updating pipes and makes them visible on screen.
     }
 
     @Override
@@ -148,21 +118,13 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         if("Start".equals(e.getActionCommand())){
             State = STATE.GAME;
             timer.start();
-            this.updater.start();
             ((JButton)e.getSource()).setVisible(false);
-        }
-
-        if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
-            gameOver = true;
-        } else {
-            posY += newVelocity;
         }
         repaint();
     }
 
     public void update(int time) {
         if (gameOver) {
-            updater.interrupt();
             timer.stop(); // fungerar ej
             return;
         }
@@ -216,13 +178,10 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     }
     private void checkForCollisions() {
         for (Obstacle obstacle : obstacles) {
-            if (obstacle.collides(posX, (int) posY, birdImageSprite.getWidth(), birdImageSprite.getHeight())) {
+
+            // Skräp, måste fixa pga man använder inte posX, posY och birbImageSprite
+            if (obstacle.collides(birb.posX, birb.posY, (int) birb.getBirbRect().getX(), (int) birb.getBirbRect().getY())) {
                 gameOver = true;
-                try {
-                    Thread.sleep(1000000000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -237,9 +196,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void keyPressed(KeyEvent e) {
-
-
-
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
