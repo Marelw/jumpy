@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
 
+    JButton restart;
 
     Timer timer;
 
@@ -51,8 +52,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
-
-
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
         this.gameOver = false;
@@ -84,13 +83,21 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         }
     }
 
+    public void restart() {
+
+    }
+
     private void GameMenu() {
         JButton start = new JButton("Start");
         this.add(start);
-        start.setMnemonic(KeyEvent.VK_S);
-        start.setActionCommand("Start");
         start.addActionListener(this);
         start.setFocusable(false);
+
+        restart = new JButton("Restart");
+        this.add(restart);
+        restart.addActionListener(this);
+        restart.setFocusable(false);
+
 
 
     }
@@ -133,7 +140,12 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             ((JButton)e.getSource()).setVisible(false);
         }
 
-        if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {
+        if("Restart".equals(e.getActionCommand())) {
+            restart();
+            return;
+        }
+
+        if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {// kan intr gå under golv
             gameOver = true;
         } else {
             posY += newVelocity;
@@ -144,12 +156,13 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public void update(int time) {
         if (gameOver) {
             updater.interrupt();
-            timer.stop(); // fungerar ej
+            //timer.stop(); // fungerar ej
             return;
         }
         addObstacle();
         checkForCollisions();
     }
+
 
     private void addObstacle() {
         pipeDelay--;
@@ -195,8 +208,10 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         }
 
     }
+
     private void checkForCollisions() {
         for (Obstacle obstacle : obstacles) {
+            // if (obstecle.collides(bird.birdX, bird.birdY, bird.birdWidth, bird.birdHeight))
             if (obstacle.collides(posX, (int) posY, birdImageSprite.getWidth(), birdImageSprite.getHeight())) {
                 gameOver = true;
                 try {
