@@ -15,14 +15,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public static final int PANEL_WIDTH = 600;
     final int PANEL_HEIGHT = 525;
 
-    /**
-     * Bird constants & attributes
-     */
-    private BufferedImage birdImageSprite;
-    // int birdVelocity = 0;
-    double newVelocity = 4.0;
-    double posY = 200;
-    int posX = 200;
 
     public boolean gameOver;
 
@@ -35,6 +27,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private int pipeDelay;
 
     private final Birb birb = new Birb();
+    private BufferedImage birdImageSprite;
+
 
     private enum STATE {
         MENU,
@@ -168,7 +162,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
                 floorObstacle.reset();
             }
 
-            ceilingObstacle.y = floorObstacle.y + floorObstacle.height + 175;
+            ceilingObstacle.y = floorObstacle.y + floorObstacle.height + 300;
         }
 
         for (Obstacle obstacle : obstacles) {
@@ -180,9 +174,10 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         for (Obstacle obstacle : obstacles) {
 
             // Skräp, måste fixa pga man använder inte posX, posY och birbImageSprite
-            if (obstacle.collides(birb.posX, birb.posY, (int) birb.getBirbRect().getX(), (int) birb.getBirbRect().getY())) {
+            if (obstacle.collides((int) birb.birbRect.getX(), (int) birb.birbRect.getY(), birb.birbRect.width, birb.birbRect.height)) {
                 gameOver = true;
             }
+
         }
     }
 

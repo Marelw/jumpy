@@ -18,6 +18,7 @@ public class Obstacle {
 
         if (direction.equals("floor")) {
             y = -(int)(Math.random() * 100) - height / 2; //GAP PLACEMENT , Kan användas för att ändra svårighetsgrad senare
+            System.out.println(y);
         }
     }
 
@@ -25,9 +26,10 @@ public class Obstacle {
         x -= speed;
     }
 
+
     public boolean collides(int birdX, int birdY, int birdWidth, int birdHeight) {
 
-        int margin = 0;
+        int margin = -7;
 
         if (inbetweenX(birdX - margin) || inbetweenX(birdX + birdWidth + margin)) {
 
