@@ -9,7 +9,7 @@ public class Birb implements Serializable {
     private static final long serialVersionUID = 126058262246325L;
 
     private static final double GRAVITY = 90;
-    private static final double TIME_SCALE = 40L;
+    private static final double TIME_SCALE = 12L;
     private static final double NANOSECOND = 1_000_000_000L;
 
     private final Rectangle box = new Rectangle(220, 180, 40, 40);
@@ -17,7 +17,6 @@ public class Birb implements Serializable {
     private double velocity = 0;
     private long jumpStart = 0;
 
-    // this is just here to keep it still until first jump
     private boolean started = false;
 
     int posY = 200;
@@ -25,17 +24,14 @@ public class Birb implements Serializable {
 
     private BufferedImage birdImageSprite;
 
-    int birdVelocity = 0;
-
     private int birbWidth;
     private int birbHeight;
 
     public Birb() {
         try {
             birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
-            //this.birdImageSpriteCount = 0;
         } catch (IOException ex) {
-            // System.out.println(ex + " Unable to load image");
+            System.out.println(ex + " Unable to load image");
         }
         this.birbWidth = birdImageSprite.getWidth();
         this.birbHeight = birdImageSprite.getHeight();
@@ -48,6 +44,8 @@ public class Birb implements Serializable {
         // using this if we can only jump on the way down
         if (velocity <= 0) {
             jumpStart = time;
+
+            // ökar hastigheten uppåt
             velocity = 100;
         }
     }
@@ -59,12 +57,12 @@ public class Birb implements Serializable {
         }
 
         double deltaTime = ((time - jumpStart) / NANOSECOND) / TIME_SCALE;
-        //System.out.println(deltaTime);
+        System.out.println(deltaTime);
         birbRect.y -= velocity * deltaTime;
         velocity -= GRAVITY * deltaTime;
     }
 
-    public Rectangle getBirbRect() {
+        public Rectangle getBirbRect() {
         return birbRect;
     }
 
@@ -85,7 +83,6 @@ public class Birb implements Serializable {
 
         if (birdImageSprite != null) {
             g2D.drawImage(birdImageSprite, (int) birbRect.getX(), (int) birbRect.getY(), null);
-            System.out.println(getBirbRect());
         } else {
             g2D.setColor(Color.MAGENTA);
             g2D.fillRect((int)box.getX(), (int)box.getY(), (int)box.getWidth(), (int)box.getHeight());

@@ -18,7 +18,6 @@ public class Obstacle {
 
         if (direction.equals("floor")) {
             y = -(int)(Math.random() * 100) - height / 2; //GAP PLACEMENT , Kan användas för att ändra svårighetsgrad senare
-            System.out.println(y);
         }
     }
 
