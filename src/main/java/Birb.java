@@ -57,7 +57,6 @@ public class Birb implements Serializable {
         }
 
         double deltaTime = ((time - jumpStart) / NANOSECOND) / TIME_SCALE;
-        System.out.println(deltaTime);
         birbRect.y -= velocity * deltaTime;
         velocity -= GRAVITY * deltaTime;
     }
@@ -83,6 +82,8 @@ public class Birb implements Serializable {
 
         if (birdImageSprite != null) {
             g2D.drawImage(birdImageSprite, (int) birbRect.getX(), (int) birbRect.getY(), null);
+            System.out.println(birbRect.getY());
+
         } else {
             g2D.setColor(Color.MAGENTA);
             g2D.fillRect((int)box.getX(), (int)box.getY(), (int)box.getWidth(), (int)box.getHeight());

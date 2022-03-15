@@ -16,7 +16,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     final int PANEL_HEIGHT = 525;
 
 
-    public boolean gameOver;
+    public static boolean gameOver;
+    public int score;
 
 
     private java.util.List<Obstacle> obstacles;
@@ -176,6 +177,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             // Skräp, måste fixa pga man använder inte posX, posY och birbImageSprite
             if (obstacle.collides((int) birb.birbRect.getX(), (int) birb.birbRect.getY(), birb.birbRect.width, birb.birbRect.height)) {
                 gameOver = true;
+            } else if (obstacle.x == birb.birbRect.getX() && obstacle.direction.equalsIgnoreCase ("floor")) {
+                score++;
+                System.out.println(score);
             }
 
         }
