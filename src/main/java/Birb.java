@@ -82,7 +82,7 @@ public class Birb implements Serializable {
 
         if (birdImageSprite != null) {
             g2D.drawImage(birdImageSprite, (int) birbRect.getX(), (int) birbRect.getY(), null);
-            System.out.println(birbRect.getY());
+            // System.out.println(birbRect.getY());
 
         } else {
             g2D.setColor(Color.MAGENTA);

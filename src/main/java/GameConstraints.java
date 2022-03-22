@@ -16,8 +16,12 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     final int PANEL_HEIGHT = 525;
 
 
+
     public static boolean gameOver;
     public int score;
+    public String scoreText = String.valueOf(score);
+
+    JLabel scorelabel = new JLabel("Current score: " + scoreText);
 
 
     private java.util.List<Obstacle> obstacles;
@@ -52,12 +56,18 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             // System.out.println(ex + " Unable to load image");
         }
 
+        scorelabel.setFont(new Font("Arial", Font.BOLD, 35));
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
+        scorelabel.setBounds(225, 0, 50, 30 );
+        scorelabel.setVisible(true);
+
 
         if (State == STATE.MENU){
             GameMenu();
         }
+
+        this.add(scorelabel);
 
         this.obstacles = new ArrayList<>();
 
@@ -179,6 +189,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
                 gameOver = true;
             } else if (obstacle.x == birb.birbRect.getX() && obstacle.direction.equalsIgnoreCase ("floor")) {
                 score++;
+                scoreText = String.valueOf(score);
+                scorelabel.setText("Current score: " + scoreText);
                 System.out.println(score);
             }
 
