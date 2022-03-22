@@ -4,6 +4,7 @@ public class Obstacle {
     public String direction;
     public Rectangle rectObstacle;
     public int speed = 3;
+    public int obstacleGap = 150;
 
     public Obstacle(String direction, int pos, int x) {
         this.direction = direction;
@@ -12,10 +13,10 @@ public class Obstacle {
         int width = 66;
 
         if (direction.equals("floor")) {
-            y = pos + 80;
+            y = pos + obstacleGap;
         }
         else {
-            height = pos - 80;
+            height = pos - obstacleGap;
         }
 
         this.rectObstacle = new Rectangle(x, y, width, height);
@@ -28,10 +29,10 @@ public class Obstacle {
         int y = 0;
 
         if (direction.equals("floor")) {
-            rectObstacle.y = pos + 80;
+            rectObstacle.y = pos + obstacleGap;
         }
         else {
-            rectObstacle.height = pos - 80;
+            rectObstacle.height = pos - obstacleGap;
         }
 
         rectObstacle.x = x;

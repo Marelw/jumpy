@@ -164,6 +164,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             if (obstacle.isOffScreen()) {
                 obstacle.reset(pos);
             }
+
         }
     }
 
@@ -173,6 +174,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             if(obstacle.rectObstacle.intersects(Birb.birbRect)) {
                 gameOver = true;
                 return true;
+            }
+            else if((int) obstacle.rectObstacle.getX() == (int)birb.birbRect.getX() && obstacle.direction.equals("floor")){
+                score++;
+                scoreText = String.valueOf(score);
+                scorelabel.setText("Current score: " + scoreText);
             }
         }
 
