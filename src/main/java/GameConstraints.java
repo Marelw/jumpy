@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
@@ -13,7 +14,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     // Panel size
     public static final int PANEL_WIDTH = 600;
-    final int PANEL_HEIGHT = 525;
+    public static final int PANEL_HEIGHT = 525;
 
 
     public static boolean gameOver;
@@ -67,9 +68,10 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         setFocusable(true);
 
 
-        this.timer = new Timer(2, e -> {
+        this.timer = new Timer(16, e -> {
             long time = System.nanoTime();
             birb.tick(time);
+            update(time);
             repaint();
             // System.out.println("tick");
         });
@@ -102,9 +104,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
             g2D.setColor(Color.MAGENTA);
-            g2D.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            g2D.fillRect((int) obstacle.rectObstacle.getX(), (int) obstacle.rectObstacle.getY(), (int) obstacle.rectObstacle.getWidth(), (int) obstacle.rectObstacle.getHeight());
         }
-        update(10); // Updating pipes and makes them visible on screen.
     }
 
     @Override
@@ -118,71 +119,55 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         repaint();
     }
 
-    public void update(int time) {
+    public void update(long time) {
         if (gameOver) {
             timer.stop(); // fungerar ej
             return;
         }
-        addObstacle();
+
+        moveObstacles();
         checkForCollisions();
+        addObstacles();
     }
 
-    private void addObstacle() {
-        pipeDelay--;
-
-        if (pipeDelay < 0) {
-            pipeDelay = PIPE_DELAY;
-            Obstacle ceilingObstacle = null;
-            Obstacle floorObstacle = null;
-
-            // Look for pipes off the screen
-            for (Obstacle obstacle : obstacles) {
-                if (obstacle.x - obstacle.width < 0) {
-                    if (ceilingObstacle == null) {
-                        ceilingObstacle = obstacle;
-                    } else if (floorObstacle == null) {
-                        floorObstacle = obstacle;
-                        break;
-                    }
-                }
-            }
-
-            if (ceilingObstacle == null) {
-                Obstacle obstacle = new Obstacle("cieling");
-                obstacles.add(obstacle);
-                ceilingObstacle = obstacle;
-            } else {
-                ceilingObstacle.reset();
-            }
-
-            if (floorObstacle == null) {
-                Obstacle obstacle = new Obstacle("floor");
-                obstacles.add(obstacle);
-                floorObstacle = obstacle;
-            } else {
-                floorObstacle.reset();
-            }
-
-            ceilingObstacle.y = floorObstacle.y + floorObstacle.height + 300;
+    private void moveObstacles() {
+        for (Obstacle o : obstacles) {
+            o.update();
         }
-
-        for (Obstacle obstacle : obstacles) {
-            obstacle.update();
-        }
-
     }
-    private void checkForCollisions() {
+
+    private void addObstacles() {
+        if (obstacles.isEmpty()) {
+            int pos = 100 + ThreadLocalRandom.current().nextInt(200);
+            int pos2 = pos + ThreadLocalRandom.current().nextInt(-50, 50);
+
+            obstacles.add(new Obstacle("ceiling", pos, GameConstraints.PANEL_WIDTH + 2));
+            obstacles.add(new Obstacle("floor", pos, GameConstraints.PANEL_WIDTH + 2));
+
+            obstacles.add(new Obstacle("ceiling", pos2, GameConstraints.PANEL_WIDTH + 300));
+            obstacles.add(new Obstacle("floor", pos2, GameConstraints.PANEL_WIDTH + 300));
+
+            return;
+        }
+
+        int pos = 100 + ThreadLocalRandom.current().nextInt(200);
+        for(Obstacle obstacle : obstacles) {
+            if (obstacle.isOffScreen()) {
+                obstacle.reset(pos);
+            }
+        }
+    }
+
+    private boolean checkForCollisions() {
         for (Obstacle obstacle : obstacles) {
 
-            // Skräp, måste fixa pga man använder inte posX, posY och birbImageSprite
-            if (obstacle.collides((int) birb.birbRect.getX(), (int) birb.birbRect.getY(), birb.birbRect.width, birb.birbRect.height)) {
+            if(obstacle.rectObstacle.intersects(Birb.birbRect)) {
                 gameOver = true;
-            } else if (obstacle.x == birb.birbRect.getX() && obstacle.direction.equalsIgnoreCase ("floor")) {
-                score++;
-                System.out.println(score);
+                return true;
             }
-
         }
+
+        return false;
     }
 
     @Override
