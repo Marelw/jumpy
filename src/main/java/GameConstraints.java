@@ -175,7 +175,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
                 gameOver = true;
                 return true;
             }
-            else if((int) obstacle.rectObstacle.getX() == (int)birb.birbRect.getX() && obstacle.direction.equals("floor")){
+            else if((int) obstacle.rectObstacle.getX() == (int)birb.birbRect.getX() && obstacle.direction.equalsIgnoreCase("floor") ){
                 score++;
                 scoreText = String.valueOf(score);
                 scorelabel.setText("Current score: " + scoreText);
