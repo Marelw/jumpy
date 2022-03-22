@@ -61,7 +61,7 @@ public class Birb implements Serializable {
         velocity -= GRAVITY * deltaTime;
     }
 
-        public Rectangle getBirbRect() {
+    public Rectangle getBirbRect() {
         return birbRect;
     }
 
