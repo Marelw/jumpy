@@ -19,23 +19,40 @@ public class Birb implements Serializable {
 
     private boolean started = false;
 
-    int posY = 200;
-    int posX = 200;
+    private int posY = 200;
+    //int posX = 200;
 
     private BufferedImage birdImageSprite;
 
     private int birbWidth;
+
+    public int getPosY() {
+        return birbRect.y;
+    }
+
+    public void setPosY(int posY) {
+        birbRect.y = posY;
+    }
+
     private int birbHeight;
 
-    public Birb() {
+    public Birb(int posX, int posY) {
         try {
             birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
         } catch (IOException ex) {
             System.out.println(ex + " Unable to load image");
         }
+        this.posY = posY;
         this.birbWidth = birdImageSprite.getWidth();
         this.birbHeight = birdImageSprite.getHeight();
         this.birbRect = new Rectangle(posX, posY, birbWidth, birbHeight);
+    }
+
+    public void resetBirb(){
+        started = false;
+        birbRect.y = posY;
+        velocity = 0;
+        jumpStart = 0;
     }
 
     public void jump(long time) {

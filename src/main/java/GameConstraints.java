@@ -1,10 +1,6 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,17 +18,19 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public String scoreText = String.valueOf(score);
 
     JLabel scorelabel = new JLabel("Current score: " + scoreText);
-
+    JButton start;
 
     private java.util.List<Obstacle> obstacles;
 
+/*
     public static final int PIPE_DELAY = 100;
     private int pauseDelay; // om vi ska kunna pausa
     private int restartDelay; // för restart
     private int pipeDelay;
+*/
 
-    private final Birb birb = new Birb();
-    private BufferedImage birdImageSprite;
+    private final Birb birb = new Birb(200, 200);
+    //private BufferedImage birdImageSprite;
 
 
     private enum STATE {
@@ -49,12 +47,12 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
-        try {
+/*        try {
             birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
             //this.birdImageSpriteCount = 0;
         } catch (IOException ex) {
             // System.out.println(ex + " Unable to load image");
-        }
+        }*/
 
         scorelabel.setFont(new Font("Arial", Font.BOLD, 35));
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -63,10 +61,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         scorelabel.setVisible(true);
 
 
-        if (State == STATE.MENU){
-            GameMenu();
-        }
-
+        createGameMenu();
+        start.setVisible(true);
         this.add(scorelabel);
 
         this.obstacles = new ArrayList<>();
@@ -86,9 +82,40 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         });
     }
 
+    private void setState(STATE state) {  //Switch case för hantering av game restart
+        switch (state) {
+            case GAME: {
+                birb.resetBirb();
+                gameOver = false;
+                start.setVisible(false);
+                State = STATE.GAME;
+                score = 0;
+                obstacles = new ArrayList<>();
+                timer.start();
+                break;
+            }
+            case MENU: {
+                gameOver = true;
+                start.setVisible(true);
+                State = STATE.MENU;
+                timer.stop();
+                break;
+            }
+        }
+    }
 
-    private void GameMenu() {
-        JButton start = new JButton("Start");
+    public void update(long time) {
+        if (gameOver) {
+            setState(STATE.MENU);
+        }
+
+        moveObstacles();
+        checkForCollisions();
+        addObstacles();
+    }
+
+    private void createGameMenu() {
+        start = new JButton("Start");
         this.add(start);
         start.setMnemonic(KeyEvent.VK_S);
         start.setActionCommand("Start");
@@ -121,23 +148,13 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public void actionPerformed(ActionEvent e) {
 
         if("Start".equals(e.getActionCommand())){
-            State = STATE.GAME;
-            timer.start();
-            ((JButton)e.getSource()).setVisible(false);
+            setState(STATE.GAME);
         }
         repaint();
+
     }
 
-    public void update(long time) {
-        if (gameOver) {
-            timer.stop(); // fungerar ej
-            return;
-        }
 
-        moveObstacles();
-        checkForCollisions();
-        addObstacles();
-    }
 
     private void moveObstacles() {
         for (Obstacle o : obstacles) {
@@ -172,7 +189,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         for (Obstacle obstacle : obstacles) {
 
             if(obstacle.rectObstacle.intersects(Birb.birbRect)) {
-                gameOver = true;
+                setState(STATE.MENU);
                 return true;
             }
             else if((int) obstacle.rectObstacle.getX() == (int)birb.birbRect.getX() && obstacle.direction.equalsIgnoreCase("floor") ){
@@ -181,6 +198,16 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
                 scorelabel.setText("Current score: " + scoreText);
             }
         }
+
+        if(birb.getPosY() >= PANEL_HEIGHT - birb.getBirbHeight() || birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv
+            setState(STATE.MENU);
+            return true;
+        }
+
+/*        if(birb.getPosY() < (PANEL_HEIGHT - birb.getBirbHeight()) || birb.getPosY() >= större än vad?) { //sätter så man inte kan gå över tak
+            setState(STATE.MENU);
+            return true;
+        }*/
 
         return false;
     }
