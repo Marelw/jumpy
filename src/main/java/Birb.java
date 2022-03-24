@@ -26,6 +26,10 @@ public class Birb implements Serializable {
 
     private int birbWidth;
 
+    public int getPosX() {
+        return birbRect.x;
+    }
+
     public int getPosY() {
         return birbRect.y;
     }
@@ -37,6 +41,8 @@ public class Birb implements Serializable {
     private int birbHeight;
 
     public Birb(int posX, int posY) {
+        int margin = 5;
+
         try {
             birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
         } catch (IOException ex) {
@@ -45,7 +51,7 @@ public class Birb implements Serializable {
         this.posY = posY;
         this.birbWidth = birdImageSprite.getWidth();
         this.birbHeight = birdImageSprite.getHeight();
-        this.birbRect = new Rectangle(posX, posY, birbWidth, birbHeight);
+        this.birbRect = new Rectangle(posX, posY, birbWidth - margin, birbHeight);
     }
 
     public void resetBirb(){
