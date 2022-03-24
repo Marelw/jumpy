@@ -14,9 +14,15 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
 
     public static boolean gameOver;
+    public int highscore;
+    public String highscoreValue = String.valueOf(highscore);
     public int score;
     public String scoreText = String.valueOf(score);
-
+    /**
+     * Some JLabels that that places a text string inside the game panel
+     * with the players current score and Highscore
+     */
+    JLabel highScoreLabel = new JLabel("Session Highscore: " + highscoreValue);
     JLabel scorelabel = new JLabel("Current score: " + scoreText);
     JButton start;
 
@@ -38,16 +44,20 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
-        scorelabel.setFont(new Font("Arial", Font.BOLD, 35));
+        highScoreLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        scorelabel.setFont(new Font("Arial", Font.BOLD, 25));
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
         scorelabel.setBounds(225, 0, 50, 30 );
+        highScoreLabel.setBounds(450, 0, 50, 30);
         scorelabel.setVisible(true);
+        highScoreLabel.setVisible(true);
 
 
         createGameMenu();
         start.setVisible(true);
         this.add(scorelabel);
+        this.add(highScoreLabel);
 
         this.obstacles = new ArrayList<>();
 
@@ -187,6 +197,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
                 score++;
                 scoreText = String.valueOf(score);
                 scorelabel.setText("Current score: " + scoreText);
+                if(score > highscore) {
+                    highscore = score;
+                    highscoreValue = String.valueOf(highscore);
+                    highScoreLabel.setText("Highscore: " + highscoreValue);
+                }
             }
         }
 
