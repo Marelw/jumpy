@@ -6,38 +6,31 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
+    private enum STATE {
+        MENU,
+        GAME
+    };
+    private STATE state = STATE.MENU;
+
+    private final Birb birb = new Birb(200, 200);
+    private java.util.List<Obstacle> obstacles;
+
     private Timer timer;
 
     // Panel size
     public static final int PANEL_WIDTH = 600;
     public static final int PANEL_HEIGHT = 525;
 
-
     public static boolean gameOver;
     public int highscore;
     public String highscoreValue = String.valueOf(highscore);
     public int score;
     public String scoreText = String.valueOf(score);
-    /**
-     * Some JLabels that that places a text string inside the game panel
-     * with the players current score and Highscore
-     */
-    JLabel highScoreLabel = new JLabel("Session Highscore: " + highscoreValue);
-    JLabel scorelabel = new JLabel("Current score: " + scoreText);
 
     JButton start;
 
-    private java.util.List<Obstacle> obstacles;
-
-    private final Birb birb = new Birb(200, 200);
-
-
-    private enum STATE {
-        MENU,
-        GAME
-    };
-
-    private STATE state = STATE.MENU;
+    JLabel highScoreLabel = new JLabel("Session Highscore: " + highscoreValue);
+    JLabel scorelabel = new JLabel("Current score: " + scoreText);
 
     /**
      * Loads in the images from lib catalog in a try-catch.
@@ -48,10 +41,31 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
 
-
         createGameMenu();
         start.setVisible(true);
 
+        creatingScoreLabels();
+
+        this.obstacles = new ArrayList<>();
+
+        // All key events
+        addMouseListener(this);
+        addKeyListener(this);
+        setFocusable(true);
+
+        this.timer = new Timer(16, e -> {
+            long time = System.nanoTime();
+            birb.tick(time);
+            update(time);
+            repaint();
+        });
+    }
+
+        /**
+         * Some JLabels that that places a text string inside the game panel
+         * with the players current score and Highscore
+         */
+    private void creatingScoreLabels() {
         highScoreLabel.setFont(new Font("Arial", Font.BOLD, 17));
         scorelabel.setFont(new Font("Arial", Font.BOLD, 17));
         this.add(scorelabel);
@@ -62,53 +76,44 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         highScoreLabel.setLocation(PANEL_WIDTH - 50, 250);
         scorelabel.setVisible(true);
         highScoreLabel.setVisible(true);
-
-        this.obstacles = new ArrayList<>();
-
-        // All key events
-        addMouseListener(this);
-        addKeyListener(this);
-        setFocusable(true);
-
-
-        this.timer = new Timer(16, e -> {
-            long time = System.nanoTime();
-            birb.tick(time);
-            update(time);
-            repaint();
-            // System.out.println("tick");
-        });
     }
 
     private void setState(STATE state) {  //Switch case för hantering av game restart
         switch (state) {
             case GAME: {
-                birb.resetBirb();
-                gameOver = false;
-                start.setVisible(false);
-                this.state = STATE.GAME;
-                score = 0;
-                scoreText = String.valueOf(score);
-                scorelabel.setText("Current score: " + scoreText);
-                obstacles = new ArrayList<>();
-                timer.start();
+                gameState();
                 break;
             }
             case MENU: {
-                gameOver = true;
-                start.setVisible(true);
-                this.state = STATE.MENU;
-                timer.stop();
+                menuState();
                 break;
             }
         }
+    }
+
+    private void menuState() {
+        gameOver = true;
+        start.setVisible(true);
+        this.state = STATE.MENU;
+        timer.stop();
+    }
+
+    private void gameState() {
+        birb.resetBirb();
+        gameOver = false;
+        start.setVisible(false);
+        this.state = STATE.GAME;
+        score = 0;
+        scoreText = String.valueOf(score);
+        scorelabel.setText("Current score: " + scoreText);
+        obstacles = new ArrayList<>();
+        timer.start();
     }
 
     public void update(long time) {
         if (gameOver) {
             setState(STATE.MENU);
         }
-
         moveObstacles();
         checkForCollisions();
         addObstacles();
@@ -121,7 +126,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         start.setActionCommand("Start");
         start.addActionListener(this);
         start.setFocusable(false);
-
     }
 
     @Override
@@ -131,16 +135,15 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
         Graphics2D g2D = (Graphics2D) g;
 
-        // Ritar över allt man gör i drapPipes. Anropar aldrig metoden som lägger hinder!!!
         birb.paint(g2D);
         drawPipes(g2D);
-
     }
 
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
             g2D.setColor(Color.MAGENTA);
-            g2D.fillRect((int) obstacle.rectObstacle.getX(), (int) obstacle.rectObstacle.getY(), (int) obstacle.rectObstacle.getWidth(), (int) obstacle.rectObstacle.getHeight());
+            g2D.fillRect((int) obstacle.rectObstacle.getX(), (int) obstacle.rectObstacle.getY(),
+                            (int) obstacle.rectObstacle.getWidth(), (int) obstacle.rectObstacle.getHeight());
         }
     }
 
@@ -181,7 +184,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             if (obstacle.isOffScreen()) {
                 obstacle.reset(pos);
             }
-
         }
     }
 
@@ -197,7 +199,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
              * "Its not the scoring jumpy birb deserves. But its the one it needs right now.
              * So we will tweak it. Because it can take it. Because its not our code." - Gordon
              */
-            else if(obstacle.rectObstacle.y == 0 && birb.getPosX() + birb.getBirbWidth() / 2 > obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 - 4 && birb.getPosX() + birb.getBirbWidth() / 2 < obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 + 4) {
+            else if(obstacle.rectObstacle.y == 0 &&
+                            birb.getPosX() + birb.getBirbWidth() / 2 > obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 - 4 &&
+                            birb.getPosX() + birb.getBirbWidth() / 2 < obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 + 4) {
                 score++;
                 scoreText = String.valueOf(score);
                 scorelabel.setText("Current score: " + scoreText);
@@ -209,8 +213,8 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             }
         }
 
-
-        if(birb.getPosY() >= PANEL_HEIGHT - birb.getBirbHeight() || birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv
+        if(birb.getPosY() >= PANEL_HEIGHT - birb.getBirbHeight() ||
+                        birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv
             setState(STATE.MENU);
             return true;
         }
@@ -227,11 +231,11 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        final int kc = e.getKeyCode();
+        if (kc == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
 
-        final int kc = e.getKeyCode();
         if (kc == KeyEvent.VK_SPACE) {
             final long time = System.nanoTime();
             birb.jump(time);
@@ -240,33 +244,31 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        // not used, should be empty
     }
-
-
 }

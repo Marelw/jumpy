@@ -20,23 +20,11 @@ public class Birb implements Serializable {
     private boolean started = false;
 
     private int posY = 200;
-    //int posX = 200;
 
     private BufferedImage birdImageSprite;
 
     private int birbWidth;
 
-    public int getPosX() {
-        return birbRect.x;
-    }
-
-    public int getPosY() {
-        return birbRect.y;
-    }
-
-    public void setPosY(int posY) {
-        birbRect.y = posY;
-    }
 
     private int birbHeight;
 
@@ -84,8 +72,15 @@ public class Birb implements Serializable {
         velocity -= GRAVITY * deltaTime;
     }
 
-    public Rectangle getBirbRect() {
-        return birbRect;
+    public void paint(Graphics2D g2D) {
+
+        if (birdImageSprite != null) {
+            g2D.drawImage(birdImageSprite, (int) birbRect.getX(), (int) birbRect.getY(), null);
+
+        } else {
+            g2D.setColor(Color.MAGENTA);
+            g2D.fillRect((int)box.getX(), (int)box.getY(), (int)box.getWidth(), (int)box.getHeight());
+        }
     }
 
     public int getBirbWidth() {
@@ -96,22 +91,11 @@ public class Birb implements Serializable {
         return birbHeight;
     }
 
-    public void paint(Graphics2D g2D) {
-        // Läs bilden --v
-        // Ange bredd och höjd på bilden (.get) --v
-        // Skapa rektangel --v
-        // använd drawImage (för att få bilden och rektangeln att synka). Lägg if-sats --v
-        // Använd intersect
-
-        if (birdImageSprite != null) {
-            g2D.drawImage(birdImageSprite, (int) birbRect.getX(), (int) birbRect.getY(), null);
-            // System.out.println(birbRect.getY());
-
-        } else {
-            g2D.setColor(Color.MAGENTA);
-            g2D.fillRect((int)box.getX(), (int)box.getY(), (int)box.getWidth(), (int)box.getHeight());
-        }
+    public int getPosX() {
+        return birbRect.x;
     }
 
-
+    public int getPosY() {
+        return birbRect.y;
+    }
 }

@@ -23,10 +23,7 @@ public class Obstacle {
     }
 
     public void reset(int pos) {
-        int height = 400;
-        int width = 66;
         int x = GameConstraints.PANEL_WIDTH + 2;
-        int y = 0;
 
         if (direction.equals("floor")) {
             rectObstacle.y = pos + obstacleGap;
@@ -34,7 +31,6 @@ public class Obstacle {
         else {
             rectObstacle.height = pos - obstacleGap;
         }
-
         rectObstacle.x = x;
     }
 

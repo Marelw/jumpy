@@ -2,9 +2,9 @@ import javax.swing.*;
 
 public class MyFrame extends JFrame {
 
-    GameConstraints gameConstraints;
+    private GameConstraints gameConstraints;
 
-    MyFrame() {
+    public MyFrame() {
         gameConstraints = new GameConstraints();
 
         this.setAlwaysOnTop(true);
