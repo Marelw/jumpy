@@ -24,6 +24,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     JLabel highScoreLabel = new JLabel("Session Highscore: " + highscoreValue);
     JLabel scorelabel = new JLabel("Current score: " + scoreText);
+
     JButton start;
 
     private java.util.List<Obstacle> obstacles;
@@ -44,20 +45,23 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
      */
     public GameConstraints() {
 
-        highScoreLabel.setFont(new Font("Arial", Font.BOLD, 25));
-        scorelabel.setFont(new Font("Arial", Font.BOLD, 25));
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
-        scorelabel.setBounds(225, 0, 50, 30 );
-        highScoreLabel.setBounds(450, 0, 50, 30);
-        scorelabel.setVisible(true);
-        highScoreLabel.setVisible(true);
 
 
         createGameMenu();
         start.setVisible(true);
+
+        highScoreLabel.setFont(new Font("Arial", Font.BOLD, 17));
+        scorelabel.setFont(new Font("Arial", Font.BOLD, 17));
         this.add(scorelabel);
         this.add(highScoreLabel);
+        scorelabel.setBounds(225, 0, 50, 30 );
+        highScoreLabel.setBounds(450, 50, 40, 30);
+        scorelabel.setLocation(220, 0);
+        highScoreLabel.setLocation(PANEL_WIDTH - 50, 250);
+        scorelabel.setVisible(true);
+        highScoreLabel.setVisible(true);
 
         this.obstacles = new ArrayList<>();
 
@@ -200,7 +204,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
                 if(score > highscore) {
                     highscore = score;
                     highscoreValue = String.valueOf(highscore);
-                    highScoreLabel.setText("Highscore: " + highscoreValue);
+                    highScoreLabel.setText("Session Highscore: " + highscoreValue);
                 }
             }
         }
