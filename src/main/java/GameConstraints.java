@@ -1,50 +1,36 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class GameConstraints extends JPanel implements ActionListener, KeyListener, MouseListener {
-
-    JButton restart;
-
-    Timer timer;
-
-    // Panel size
-    public static final int PANEL_WIDTH = 600;
-    final int PANEL_HEIGHT = 525;
-
-    /**
-     * Bird constants & attributes
-     */
-    private BufferedImage birdImageSprite;
-    int birdVelocity = 0;
-    double newVelocity = 4.0;
-    double posY = 200;
-    int posX = 200;
-    int score = 0;
-
-    public Boolean gameOver;
-
-    private transient FrameUpdater updater;
-    private java.util.List<Obstacle> obstacles;
-
-    public static final int PIPE_DELAY = 100;
-    private int pauseDelay; // om vi ska kunna pausa
-    private int restartDelay; // för restart
-    private int pipeDelay;
-
     private enum STATE {
         MENU,
         GAME
     };
+    private STATE state = STATE.MENU;
 
-    private STATE State = STATE.MENU;
+    private final Birb birb = new Birb(200, 200);
+    private java.util.List<Obstacle> obstacles;
 
+    private Timer timer;
+
+    // Panel size
+    public static final int PANEL_WIDTH = 600;
+    public static final int PANEL_HEIGHT = 525;
+
+    public static boolean gameOver;
+    public int highscore;
+    public String highscoreValue = String.valueOf(highscore);
+    public int score;
+    public String scoreText = String.valueOf(score);
+
+    JButton start;
+
+    JLabel highScoreLabel = new JLabel("Session Highscore: " + highscoreValue);
+    JLabel scorelabel = new JLabel("Current score: " + scoreText);
 
     /**
      * Loads in the images from lib catalog in a try-catch.
@@ -54,79 +40,110 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(Color.ORANGE);
-        this.gameOver = false;
-        try {
-            this.birdImageSprite = ImageIO.read(new File("lib/hampus.png"));
-            //this.birdImageSpriteCount = 0;
-        } catch (IOException ex) {
-            System.out.println(ex + " Unable to load image");
-        }
 
-        if (State == STATE.MENU){
-            GameMenu();
-        }
+        createGameMenu();
+        start.setVisible(true);
 
+        creatingScoreLabels();
 
         this.obstacles = new ArrayList<>();
-        this.updater = new FrameUpdater(this, 60);
-        this.updater.setDaemon(true); // it should not keep the app running
-        if (State == STATE.GAME){
-            this.updater.start();
-        }
 
+        // All key events
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
-        timer = new Timer(15, this);
-        if (State == STATE.GAME){
-            timer.start();
+
+        this.timer = new Timer(16, e -> {
+            long time = System.nanoTime();
+            birb.tick(time);
+            update(time);
+            repaint();
+        });
+    }
+
+        /**
+         * Some JLabels that that places a text string inside the game panel
+         * with the players current score and Highscore
+         */
+    private void creatingScoreLabels() {
+        highScoreLabel.setFont(new Font("Arial", Font.BOLD, 17));
+        scorelabel.setFont(new Font("Arial", Font.BOLD, 17));
+        this.add(scorelabel);
+        this.add(highScoreLabel);
+        scorelabel.setBounds(225, 0, 50, 30 );
+        highScoreLabel.setBounds(450, 50, 40, 30);
+        scorelabel.setLocation(220, 0);
+        highScoreLabel.setLocation(PANEL_WIDTH - 50, 250);
+        scorelabel.setVisible(true);
+        highScoreLabel.setVisible(true);
+    }
+
+    private void setState(STATE state) {  //Switch case för hantering av game restart
+        switch (state) {
+            case GAME: {
+                gameState();
+                break;
+            }
+            case MENU: {
+                menuState();
+                break;
+            }
         }
     }
 
-    public void restart() {
-
+    private void menuState() {
+        gameOver = true;
+        start.setVisible(true);
+        this.state = STATE.MENU;
+        timer.stop();
     }
 
-    private void GameMenu() {
-        JButton start = new JButton("Start");
+    private void gameState() {
+        birb.resetBirb();
+        gameOver = false;
+        start.setVisible(false);
+        this.state = STATE.GAME;
+        score = 0;
+        scoreText = String.valueOf(score);
+        scorelabel.setText("Current score: " + scoreText);
+        obstacles = new ArrayList<>();
+        timer.start();
+    }
+
+    public void update(long time) {
+        if (gameOver) {
+            setState(STATE.MENU);
+        }
+        moveObstacles();
+        checkForCollisions();
+        addObstacles();
+    }
+
+    private void createGameMenu() {
+        start = new JButton("Start");
         this.add(start);
+        start.setMnemonic(KeyEvent.VK_S);
+        start.setActionCommand("Start");
         start.addActionListener(this);
         start.setFocusable(false);
-
-        restart = new JButton("Restart");
-        this.add(restart);
-        restart.addActionListener(this);
-        restart.setFocusable(false);
-
-
-
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        final Dimension d = this.getSize();
 
         Graphics2D g2D = (Graphics2D) g;
-        drawBird(g2D);
-        drawPipes(g2D);
-    }
 
-    /**
-     * Draws in both foreground and background, sets how many pixels they cover.
-     *
-     */
-    private void drawBird(Graphics2D g2D) {
-        if (posY < (PANEL_HEIGHT - birdImageSprite.getHeight(null)) || posY >= -100) {
-            posY += birdVelocity;
-            // cant go above Panel/frame gameOver??
-        }
-        g2D.drawImage(birdImageSprite, posX, (int) posY, null);
+        birb.paint(g2D);
+        drawPipes(g2D);
     }
 
     private void drawPipes(Graphics2D g2D) {
         for (Obstacle obstacle : obstacles) {
             g2D.setColor(Color.MAGENTA);
-            g2D.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            g2D.fillRect((int) obstacle.rectObstacle.getX(), (int) obstacle.rectObstacle.getY(),
+                            (int) obstacle.rectObstacle.getWidth(), (int) obstacle.rectObstacle.getHeight());
         }
     }
 
@@ -134,155 +151,124 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     public void actionPerformed(ActionEvent e) {
 
         if("Start".equals(e.getActionCommand())){
-            State = STATE.GAME;
-            timer.start();
-            this.updater.start();
-            ((JButton)e.getSource()).setVisible(false);
-        }
-
-        if("Restart".equals(e.getActionCommand())) {
-            restart();
-            return;
-        }
-
-        if (posY >= PANEL_HEIGHT- birdImageSprite.getHeight(null) || posY < 0) {// kan intr gå under golv
-            gameOver = true;
-        } else {
-            posY += newVelocity;
+            setState(STATE.GAME);
+            final long time = System.nanoTime();
+            birb.jump(time);
         }
         repaint();
+
     }
 
-    public void update(int time) {
-        if (gameOver) {
-            updater.interrupt();
-            //timer.stop(); // fungerar ej
+    private void moveObstacles() {
+        for (Obstacle o : obstacles) {
+            o.update();
+        }
+    }
+
+    private void addObstacles() {
+        if (obstacles.isEmpty()) {
+            int pos = 100 + ThreadLocalRandom.current().nextInt(200);
+            int pos2 = pos + ThreadLocalRandom.current().nextInt(-50, 50);
+
+            obstacles.add(new Obstacle("ceiling", pos, GameConstraints.PANEL_WIDTH + 2));
+            obstacles.add(new Obstacle("floor", pos, GameConstraints.PANEL_WIDTH + 2));
+
+            obstacles.add(new Obstacle("ceiling", pos2, GameConstraints.PANEL_WIDTH + 300));
+            obstacles.add(new Obstacle("floor", pos2, GameConstraints.PANEL_WIDTH + 300));
+
             return;
         }
-        addObstacle();
-        checkForCollisions();
+
+        int pos = 100 + ThreadLocalRandom.current().nextInt(200);
+        for(Obstacle obstacle : obstacles) {
+            if (obstacle.isOffScreen()) {
+                obstacle.reset(pos);
+            }
+        }
     }
 
-
-    private void addObstacle() {
-        pipeDelay--;
-
-        if (pipeDelay < 0) {
-            pipeDelay = PIPE_DELAY;
-            Obstacle ceilingObstacle = null;
-            Obstacle floorObstacle = null;
-
-            // Look for pipes off the screen
-            for (Obstacle obstacle : obstacles) {
-                if (obstacle.x - obstacle.width < 0) {
-                    if (ceilingObstacle == null) {
-                        ceilingObstacle = obstacle;
-                    } else if (floorObstacle == null) {
-                        floorObstacle = obstacle;
-                        break;
-                    }
-                }
-            }
-
-            if (ceilingObstacle == null) {
-                Obstacle obstacle = new Obstacle("cieling");
-                obstacles.add(obstacle);
-                ceilingObstacle = obstacle;
-            } else {
-                ceilingObstacle.reset();
-            }
-
-            if (floorObstacle == null) {
-                Obstacle obstacle = new Obstacle("floor");
-                obstacles.add(obstacle);
-                floorObstacle = obstacle;
-            } else {
-                floorObstacle.reset();
-            }
-
-            ceilingObstacle.y = floorObstacle.y + floorObstacle.height + 175;
-        }
-
+    private boolean checkForCollisions() {
         for (Obstacle obstacle : obstacles) {
-            obstacle.update();
-        }
 
-    }
+            if(obstacle.rectObstacle.intersects(Birb.birbRect)) {
+                setState(STATE.MENU);
+                return true;
+            }
 
-    private void checkForCollisions() {
-        for (Obstacle obstacle : obstacles) {
-            // if (obstecle.collides(bird.birdX, bird.birdY, bird.birdWidth, bird.birdHeight))
-            if (obstacle.collides(posX, (int) posY, birdImageSprite.getWidth(), birdImageSprite.getHeight())) {
-                gameOver = true;
-                try {
-                    Thread.sleep(1000000000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else if(obstacle.x == posX && obstacle.direction.equalsIgnoreCase("floor")) {
+            /**
+             * "Its not the scoring jumpy birb deserves. But its the one it needs right now.
+             * So we will tweak it. Because it can take it. Because its not our code." - Gordon
+             */
+            else if(obstacle.rectObstacle.y == 0 &&
+                            birb.getPosX() + birb.getBirbWidth() / 2 > obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 - 4 &&
+                            birb.getPosX() + birb.getBirbWidth() / 2 < obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 + 4) {
                 score++;
-                System.out.println(score);
+                scoreText = String.valueOf(score);
+                scorelabel.setText("Current score: " + scoreText);
+                if(score > highscore) {
+                    highscore = score;
+                    highscoreValue = String.valueOf(highscore);
+                    highScoreLabel.setText("Session Highscore: " + highscoreValue);
+                }
             }
         }
-    }
 
+        if(birb.getPosY() >= PANEL_HEIGHT - birb.getBirbHeight() ||
+                        birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv
+            setState(STATE.MENU);
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            birbJump();
+        if (e.getButton() == MouseEvent.BUTTON1){
+            final long time = System.nanoTime();
+            birb.jump(time);
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            birbJump();
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        final int kc = e.getKeyCode();
+        if (kc == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
 
-    }
-
-    private void birbJump() {
-
-        if(!gameOver) {
-            posY -= 70.5; // ändrar hur högt man hoppar
-            posY = Math.max(0, posY); // kan ej ta dig genom taket
+        if (kc == KeyEvent.VK_SPACE) {
+            final long time = System.nanoTime();
+            birb.jump(time);
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        // not used, should be empty
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        // not used, should be empty
     }
-
-
 }

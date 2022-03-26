@@ -1,58 +1,44 @@
+import java.awt.*;
+
 public class Obstacle {
-
     public String direction;
-    public int x;
-    public int y;
-    public int width;
-    public int height;
-    public int speed = 3;
+    public Rectangle rectObstacle;
+    public int speed = 6;
+    public int obstacleGap = 150;
 
-    public Obstacle(String direction) {
+    public Obstacle(String direction, int pos, int x) {
         this.direction = direction;
-        reset();
-    }
-    public void reset() {
-        width = 66;
-        height = 400;
-        x = GameConstraints.PANEL_WIDTH + 2;
+        int y = 0;
+        int height = 400;
+        int width = 66;
 
         if (direction.equals("floor")) {
-            y = -(int)(Math.random() * 100) - height / 2; //GAP PLACEMENT , Kan användas för att ändra svårighetsgrad senare
+            y = pos + obstacleGap;
         }
+        else {
+            height = pos - obstacleGap;
+        }
+
+        this.rectObstacle = new Rectangle(x, y, width, height);
+    }
+
+    public void reset(int pos) {
+        int x = GameConstraints.PANEL_WIDTH + 2;
+
+        if (direction.equals("floor")) {
+            rectObstacle.y = pos + obstacleGap;
+        }
+        else {
+            rectObstacle.height = pos - obstacleGap;
+        }
+        rectObstacle.x = x;
+    }
+
+    public boolean isOffScreen() {
+        return (rectObstacle.x < -66);
     }
 
     public void update() {
-        x -= speed;
-    }
-
-    public boolean collides(int birdX, int birdY, int birdWidth, int birdHeight) {
-
-        int margin = 0;
-
-        if (inbetweenX(birdX - margin) || inbetweenX(birdX + birdWidth + margin)) {
-
-            if(inbetweenY(birdY - margin) || inbetweenY(birdY + birdHeight + margin)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean inbetween(int objectX, int mypos, int length) { //faktorisera mera
-        return objectX > mypos && objectX < mypos + length;
-    }
-
-    private boolean inbetweenX(int objectX) {
-        if (objectX > x && objectX < x + width) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean inbetweenY(int objectY) {
-        if (objectY > y && objectY < y + height) {
-            return true;
-        }
-        return false;
+        rectObstacle.x -= speed;
     }
 }
