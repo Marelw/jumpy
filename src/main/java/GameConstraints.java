@@ -60,6 +60,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             update(time);
             repaint();
         });
+        audioPlayer.playBackround();
     }
 
         /**
@@ -109,7 +110,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         scorelabel.setText("Current score: " + scoreText);
         obstacles = new ArrayList<>();
         timer.start();
-        audioPlayer.playBackround();
     }
 
     public void update(long time) {
