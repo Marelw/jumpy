@@ -218,8 +218,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         }
 
         if(birb.getPosY() >= PANEL_HEIGHT - birb.getBirbHeight() ||
-                        birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv
+                        birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv eller tak
             setState(STATE.MENU);
+            audioPlayer.playDead();
             return true;
         }
         return false;
