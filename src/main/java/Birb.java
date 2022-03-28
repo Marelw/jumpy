@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
+@SuppressWarnings("java:S106")
 public class Birb implements Serializable {
     private static final long serialVersionUID = 126058262246325L;
 
