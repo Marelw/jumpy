@@ -48,7 +48,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         creatingScoreLabels();
 
         this.obstacles = new ArrayList<>();
-        this. audioPlayer = new AudioPlayer();
+        audioPlayer = new AudioPlayer();
         // All key events
         addMouseListener(this);
         addKeyListener(this);
@@ -244,6 +244,13 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         if (kc == KeyEvent.VK_SPACE) {
             final long time = System.nanoTime();
             birb.jump(time);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        final int kc = e.getKeyCode();
+        if (kc == KeyEvent.VK_SPACE) {
             audioPlayer.playJump();
         }
     }
@@ -253,10 +260,6 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         // not used, should be empty
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // not used, should be empty
-    }
 
     @Override
     public void mousePressed(MouseEvent e) {
