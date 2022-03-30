@@ -24,7 +24,13 @@
 			<version>5.4.2</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+	  <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
+	  <dependency>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-assembly-plugin</artifactId>
+		  <version>3.3.0</version>
+	  </dependency>
+  </dependencies>
 
   <build>
 		<plugins>
@@ -38,6 +44,18 @@
 					<source>11</source>
 					<target>11</target>
 					<verbose>false</verbose>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<archives>
+						<manifest>
+							<mainClass>Main</mainClass>
+						</manifest>
+					</archives>
 				</configuration>
 			</plugin>
 			<plugin>
