@@ -16,6 +16,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     private java.util.List<Obstacle> obstacles;
 
     private Timer timer;
+    AudioPlayer audioPlayer;
 
     // Panel size
     public static final int PANEL_WIDTH = 600;
@@ -47,7 +48,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         creatingScoreLabels();
 
         this.obstacles = new ArrayList<>();
-
+        audioPlayer = new AudioPlayer();
         // All key events
         addMouseListener(this);
         addKeyListener(this);
@@ -59,6 +60,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             update(time);
             repaint();
         });
+        audioPlayer.playBackround();
     }
 
         /**
@@ -192,6 +194,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
 
             if(obstacle.rectObstacle.intersects(Birb.birbRect)) {
                 setState(STATE.MENU);
+                audioPlayer.playDead();
                 return true;
             }
 
@@ -202,6 +205,7 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
             else if(obstacle.rectObstacle.y == 0 &&
                             birb.getPosX() + birb.getBirbWidth() / 2 > obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 - 4 &&
                             birb.getPosX() + birb.getBirbWidth() / 2 < obstacle.rectObstacle.x + obstacle.rectObstacle.width / 2 + 4) {
+                audioPlayer.playScore();
                 score++;
                 scoreText = String.valueOf(score);
                 scorelabel.setText("Current score: " + scoreText);
@@ -214,8 +218,9 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
         }
 
         if(birb.getPosY() >= PANEL_HEIGHT - birb.getBirbHeight() ||
-                        birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv
+                        birb.getPosY() < 0 ) { // sätter så man inte kan gå under golv eller tak
             setState(STATE.MENU);
+            audioPlayer.playDead();
             return true;
         }
         return false;
@@ -243,14 +248,18 @@ public class GameConstraints extends JPanel implements ActionListener, KeyListen
     }
 
     @Override
+    public void keyReleased(KeyEvent e) {
+        final int kc = e.getKeyCode();
+        if (kc == KeyEvent.VK_SPACE) {
+            audioPlayer.playJump();
+        }
+    }
+
+    @Override
     public void keyTyped(KeyEvent e) {
         // not used, should be empty
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // not used, should be empty
-    }
 
     @Override
     public void mousePressed(MouseEvent e) {
