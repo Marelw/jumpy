@@ -33,6 +33,11 @@
   </dependencies>
 
   <build>
+	  <resources>
+		  <resource>
+			  <directory>src/main/resources</directory>
+		  </resource>
+	  </resources>
 		<plugins>
 			<plugin>
 				<!-- By default,Maven assumes JDK 1.5. Add maven-compiler-plugin to build 
@@ -49,13 +54,34 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.1.0</version>
 				<configuration>
 					<archives>
 						<manifest>
-							<mainClass>Main</mainClass>
+							<addClasspath>true</addClasspath>
+							<mainClass>src.main.java.Main</mainClass>
 						</manifest>
 					</archives>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>
+								Main
+							</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>lib/*.*</Class-Path>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
