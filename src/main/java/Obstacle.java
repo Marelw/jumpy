@@ -4,7 +4,7 @@ public class Obstacle {
     public String direction;
     public Rectangle rectObstacle;
     public int speed = 6;
-    public int obstacleGap = 150;
+    public int obstacleGap = 115;
 
     public Obstacle(String direction, int pos, int x) {
         this.direction = direction;
