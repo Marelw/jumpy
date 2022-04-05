@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Birb implements Serializable {
     private static final long serialVersionUID = 126058262246325L;
 
-    private static final double GRAVITY = 90;
+    private static final double GRAVITY = 70;
     private static final double TIME_SCALE = 12L;
     private static final double NANOSECOND = 1_000_000_000L;
 
